@@ -1,0 +1,350 @@
+% !TEX program = xelatex
+% ============================================================
+% CUMCM 全国大学生数学建模竞赛 —— 中文论文模板（ctex + xelatex）
+% 数学建模 skill 自动生成。编译： xelatex main.tex  (跑两遍)
+% 或： python <skill>/scripts/compile.py main.tex
+% ============================================================
+\documentclass[12pt]{ctexart}
+
+% ---------- 页面与通用宏包 ----------
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage{graphicx}
+\usepackage{booktabs}          % 三线表
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{listings}          % 代码
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=blue,urlcolor=blue}
+
+% ====== 页面约束宏包（防止空白/溢出） ======
+\usepackage{flafter}           % 浮动体不出现在引用之前
+\usepackage{afterpage}         % 延后大图到下一页，避免局部撑破
+\usepackage{placeins}          % \FloatBarrier 节间阻断浮动
+\usepackage{needspace}         % 关键位置防止孤行/孤节
+\usepackage{tocloft}           % 目录紧凑化
+
+% ====== 核心页面控制 ======
+\raggedbottom                  % 防止 LaTeX 拉伸段落填满页面，消除大段空白
+\setlength{\parskip}{0.5ex plus 0.2ex minus 0.2ex}  % 段落间距有弹性
+\setlength{\abovecaptionskip}{6pt}
+\setlength{\belowcaptionskip}{4pt}
+
+% 浮动体间距紧凑化（减少空白）
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{10pt plus 2pt minus 3pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\setlength{\dblfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\dbltextfloatsep}{10pt plus 2pt minus 3pt}
+
+% 浮动体参数：更多浮动区域、允许更多浮动体
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{5}
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.6}
+\renewcommand{\textfraction}{0.15}
+\renewcommand{\floatpagefraction}{0.7}
+
+% 防止孤行（widow/orphan）
+\widowpenalty=10000
+\clubpenalty=10000
+
+% 容忍度：减少 overfull hbox，防止文字突出
+\tolerance=800
+\emergencystretch=1.5em
+\hbadness=3000
+
+% ---------- 目录紧凑化 ----------
+% 取消目录中的点线，节省水平空间
+\renewcommand{\cftdot}{}
+% 节标题缩进紧凑
+\setlength{\cftbeforesecskip}{2pt}
+\setlength{\cftbeforesubsecskip}{1pt}
+% 目录页码格式
+\renewcommand{\cftsecfont}{\normalsize}
+\renewcommand{\cftsubsecfont}{\small}
+\renewcommand{\cftsecpagefont}{\normalsize}
+\renewcommand{\cftsubsecpagefont}{\small}
+
+% ---------- 图表与代码风格 ----------
+\captionsetup{font=small,labelsep=quad}
+\graphicspath{{figures/}{../figures/}}
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue!70!black},
+  commentstyle=\color{green!50!black},
+  stringstyle=\color{red!60!black},
+  numbers=left, numberstyle=\tiny\color{gray},
+  frame=single, breaklines=true, showstringspaces=false,
+  tabsize=4, columns=flexible,
+}
+
+% ---------- 定理环境 ----------
+\newtheorem{theorem}{定理}
+\newtheorem{lemma}{引理}
+\newtheorem{definition}{定义}
+\newtheorem{assumption}{假设}
+
+% ============================================================
+\begin{document}
+
+% ------------------ 标题（不写校名/队号，符合盲审） ------------------
+\title{\textbf{基于 XXX 模型的 YYY 问题研究}}
+\author{}
+\date{}
+\maketitle
+\thispagestyle{empty}
+
+% ===================================================================
+%   摘  要  页  （⛔ 硬约束：必须控制在 1 页以内）
+%   写法要点：每问一段"用什么模型 + 怎么求解 + 关键量化结果"
+%   若超出 1 页，需压缩文字或减小字体到 \small
+% ===================================================================
+\begin{center}\zihao{4}\textbf{摘\quad 要}\end{center}
+
+% -- 摘要正文（用小四/五号字以保证单页可容纳足够信息）--
+\zihao{-4}  % 小四号：紧凑但清晰
+\noindent
+本文针对 …… 问题，建立了 …… 模型。
+
+\textbf{针对问题一}，考虑 ……，采用 …… 方法建立 …… 模型，通过 …… 求解，
+得到 ……（给出关键量化结果，如误差 X\%、最优值 Y）。
+
+\textbf{针对问题二}，……
+
+\textbf{针对问题三}，……
+
+最后，本文对模型进行了灵敏度分析与误差分析，验证了模型的稳健性；
+并讨论了模型的优缺点与推广。
+
+\vspace{1em}
+\noindent\textbf{关键词：}\quad 关键词1；\ 关键词2；\ 关键词3；\ 关键词4
+
+% 摘要页完毕，强制换页
+\newpage
+
+% ===================================================================
+%   目  录  页  （⛔ 硬约束：必须控制在 1 页以内）
+%   若目录过长（>1页）：使用 \setcounter{tocdepth}{1} 只显示到 section
+%   还不行：\setcounter{tocdepth}{0} 只显示到 section（无subsection）
+% ===================================================================
+\setcounter{tocdepth}{2}       % 默认到 subsection；超页时调为 1
+\renewcommand{\contentsname}{\centerline{\zihao{4}\textbf{目\quad 录}}}
+\tableofcontents
+\newpage
+
+% ------------------ 正文 ------------------
+\section{问题重述}
+\subsection{问题背景}
+\subsection{问题提出}
+本文需解决以下问题：
+\begin{enumerate}[label=(\arabic*)]
+  \item ……
+  \item ……
+  \item ……
+\end{enumerate}
+\FloatBarrier  % 确保重述节的浮动体不出界
+
+\section{问题分析}
+% mm-problem-analyst 的审题结论落于此
+\FloatBarrier
+
+\section{模型假设与局限性讨论}
+
+\subsection{基本假设}
+每条假设需说明\textbf{依据}与\textbf{合理性}，并讨论\textbf{局限性}——若放宽该假设会导致什么后果。
+\begin{assumption}
+\textbf{假设 1（…… 假设）。}依据：……。局限性：若该假设不成立（如 ……），
+模型在 …… 场景下会 ……（偏高/偏低/失效），后续可用 …… 方法修正。
+\end{assumption}
+
+\begin{assumption}
+\textbf{假设 2（…… 假设）。}依据：……。局限性：……
+\end{assumption}
+
+\subsection{假设敏感性讨论}
+逐一分析每条假设对结论的影响程度：
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{假设 1 不成立时}：……（定量估算偏差量级、影响方向、是否改变结论方向）。
+  \item \textbf{假设 2 不成立时}：……
+\end{enumerate}
+\textbf{结论}：关键假设为 ……，若该假设不成立则结论不再可靠；其余假设放宽
+对结论影响有限（控制在 $\pm\cdots\%$ 以内）。
+\FloatBarrier
+
+\section{符号说明}
+\begin{center}
+\begin{tabular}{cl}
+\toprule
+符号 & 含义 \\
+\midrule
+$x_i$       & …… \\
+$\lambda$   & …… \\
+\bottomrule
+\end{tabular}
+\end{center}
+\FloatBarrier
+
+\section{模型的建立与求解}
+
+\subsection{问题一模型}
+\subsubsection{模型建立}
+\begin{equation}
+\min_{x}\ f(x)=\sum_{i=1}^{n} c_i x_i,\quad
+\text{s.t.}\ \ \sum_{i} a_{ij}x_i \le b_j.
+\end{equation}
+
+\subsubsection{模型求解}
+% 算法伪代码示例
+\begin{algorithm}[H]
+\caption{求解流程}
+\begin{algorithmic}[1]
+\State 初始化参数
+\While{未收敛}
+  \State 更新解
+\EndWhile
+\State \Return 最优解
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{结果与分析}
+
+% ---- 插图示例：统一使用 [htbp] 而非 [H]，减少强制空白 ----
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{fig_convergence.png}
+\caption{算法收敛曲线}
+\label{fig:conv}
+\end{figure}
+
+如图~\ref{fig:conv} 所示，算法在约 …… 代后收敛至最优值 ……，
+收敛过程平稳，未出现震荡。
+
+\FloatBarrier
+
+\subsection{问题二模型}
+\subsection{问题三模型}
+
+% ============================================================
+\section{模型对比验证}
+% ⛔ 加分关键：至少与 1-2 个基准/消融/替代模型对比，证明所选模型的优势
+% ============================================================
+
+\subsection{对比模型设置}
+为验证本文模型的有效性，设置以下对比方案：
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{本文模型}：……（简述）。
+  \item \textbf{基准模型 A（……）}：……（如经典方法/简单替代/线性版）。
+  \item \textbf{消融模型 B（去除 …… 模块）}：……（验证某创新组件的贡献）。
+\end{enumerate}
+
+\subsection{多指标对比}
+
+\begin{table}[htbp]
+\centering
+\caption{不同模型的多指标对比}
+\label{tab:compare}
+\begin{tabular}{lcccc}
+\toprule
+模型 & 指标 1（……） & 指标 2（……） & 指标 3（……） & 综合评分 \\
+\midrule
+本文模型    & …… & …… & …… & \textbf{……} \\
+基准模型 A  & …… & …… & …… & …… \\
+消融模型 B  & …… & …… & …… & …… \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+由表~\ref{tab:compare}：
+\begin{enumerate}[label=(\arabic*)]
+  \item 本文模型在指标 1 上比基准 A 提升 \textbf{……\%}，
+       说明……（分析原因）。
+  \item 去除 …… 模块后（消融 B），指标 2 下降 \textbf{……\%}，
+       验证了该模块的关键贡献。
+  \item 在指标 3 上各模型表现接近，说明该指标对模型选择不敏感。
+\end{enumerate}
+
+% 对比雷达图（多指标可视化）
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.6\textwidth]{fig_radar_compare.png}
+\caption{模型多指标对比雷达图}
+\label{fig:radar_compare}
+\end{figure}
+\FloatBarrier
+
+\section{灵敏度分析}
+
+% ---- 灵敏度分析图 ----
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{fig_sensitivity.png}
+\caption{参数灵敏度分析（龙卷风图）}
+\label{fig:sens}
+\end{figure}
+
+如图~\ref{fig:sens}，参数 …… 对目标函数的影响最大，当该参数变动
+$\pm 20\%$ 时，目标函数变化幅度为 ……。其它参数在合理范围内
+对结果影响较小，说明模型具有良好的稳健性。
+
+% 若做了多因素组合灵敏度（推荐），追加瀑布图
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=0.75\textwidth]{fig_waterfall.png}
+% \caption{各因素对结果的贡献分解（瀑布图）}
+% \label{fig:waterfall}
+% \end{figure}
+
+\FloatBarrier
+
+% ============================================================
+\section{模型的评价与推广}
+% ============================================================
+
+\subsection{模型的优点}
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{理论创新}：……（如：将 …… 与 …… 结合，解决了 …… 问题）。
+  \item \textbf{方法创新}：……（如：引入 …… 机制 / 设计了 …… 算法）。
+  \item \textbf{工程实用}：……（如：计算复杂度低、输入数据易获取）。
+  \item \textbf{可解释性强}：……（如：每个参数有明确的物理/经济含义）。
+\end{enumerate}
+
+\subsection{模型的缺点与改进方向（深度讨论）}
+% ⛔ 不要只写"参数敏感""数据不足"——要具体到哪个参数、缺什么数据、量级多大
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{假设局限性}：假设 …… 在实际中可能不成立（如 …… 场景），
+        导致模型在极端情况下误差可达 ……\%。改进方向：引入 …… 修正项 /
+        非线性扩展 / 鲁棒优化。
+  \item \textbf{数据依赖性}：模型对 …… 数据较为敏感（由灵敏度分析可知），
+        当前数据精度为 ……，若误差增大到 ……，结论可能逆转。
+        改进方向：贝叶斯推断 / 区间估计替代点估计。
+  \item \textbf{计算瓶颈}：当问题规模扩大到 …… 时，当前算法复杂度
+        $O(\cdots)$ 导致求解时间不可接受。
+        改进方向：……（近似算法 / 并行化 / 启发式加速）。
+  \item \textbf{泛化局限}：当前模型基于 …… 领域假设，推广到 …… 领域需
+        重新校准 …… 参数。
+\end{enumerate}
+
+\subsection{模型的推广}
+\needspace{3\baselineskip}
+……（如：应用于 …… 场景、扩展到多阶段/多层决策、与 …… 技术融合等）
+
+% ------------------ 参考文献 ------------------
+\begin{thebibliography}{99}
+\bibitem{ref1} 作者. 书名/文章名[M/J]. 出版社/期刊, 年份.
+\end{thebibliography}
+
+% ------------------ 附录（代码） ------------------
+\appendix
+\section{支撑材料：核心代码}
+\lstinputlisting[language=Python,caption={问题一求解代码}]{../code/solve_q1.py}
+
+\end{document}
