@@ -111,6 +111,22 @@ def compile_tex(tex, engine=None, use_bib=False, clean=False, passes=2):
         show_errors(os.path.join(cwd, base + ".log"))
         rc = 3
 
+    # ---- PDF 版本留存 ----
+    if os.path.exists(pdf):
+        version_dir = os.path.join(cwd, "versions")
+        os.makedirs(version_dir, exist_ok=True)
+        # 自动编号版本文件: main_v000.pdf, main_v001.pdf ...
+        existing = sorted([f for f in os.listdir(version_dir)
+                          if f.startswith(base + "_v") and f.endswith(".pdf")])
+        next_num = len(existing)
+        ver_name = f"{base}_v{next_num:03d}.pdf"
+        ver_path = os.path.join(version_dir, ver_name)
+        try:
+            shutil.copy2(pdf, ver_path)
+            print(f"📄 版本留存: {ver_name}  (versions/ 共 {next_num + 1} 个版本)")
+        except OSError as e:
+            print(f"⚠ 版本留存失败: {e}")
+
     if clean:
         for ext in AUX_EXTS:
             p = os.path.join(cwd, base + ext)

@@ -136,10 +136,11 @@ python <skill>/scripts/new_project.py "<赛题名>" --lang zh   # 或 en
 4. **多指标评估**：每模型报告精度+效率+稳健性三类指标；有冲突时用 Pareto 前沿讨论权衡。
 
 ```bash
-# 编译
+# 编译（自动留存版本到 paper/versions/main_vXXX.pdf）
 python <skill>/scripts/compile.py paper/main.tex        # 中文自动走 xelatex
 ```
 编译失败时脚本会回读 .log 定位报错，修到出 PDF。
+**⛔ PDF 版本留存**：`compile.py` 每次成功编译自动复制 PDF 到 `paper/versions/` 目录（`main_v000.pdf`, `main_v001.pdf`, …），确保每个版本可追溯、可回退。阶段 7 每轮修改后也必须重新编译留存版本。
 参考：`06-writing.md`。
 > ✅ 门禁：`paper/main.pdf` 已成功编译、每张图被正文引用并解读、摘要含量化结果、**页面约束+四项深度要求全部满足** → 才可进入阶段 7。
 
@@ -149,16 +150,18 @@ python <skill>/scripts/compile.py paper/main.tex        # 中文自动走 xelate
 Workflow({ scriptPath: "<skill>/workflows/adversarial-review.js",
            args: { draftPath: "<slug>/paper/main.tex", lang: "zh",
                    targetScore: 7.5, maxRounds: 4,
+                   projectRoot: "<skill>",
                    dataContext: "<关键结果数值摘要>" } })
 ```
-机制：写作者生成 → 审稿人/验证者/推理者**并行对抗打分**（0-10 五维度）→ 若 <7.5，写作者按弱点逐条修改（含**自动补充实验**）→ 复评，≤4 轮。返回最终评分、每轮记录、残留 high 弱点。
-把评审记录写入 `REPORT.md` 第 6 节，最后再 `compile.py` 出终版 PDF（终版也须通过页面约束检查）。
+机制：写作者生成 → 审稿人/验证者/推理者**并行对抗打分**（0-10 五维度）→ 若 <7.5，写作者按弱点逐条修改（含**自动补充实验**）→ **每轮修改后自动编译并留存版本 PDF** → 复评，≤4 轮。返回最终评分、每轮记录、残留 high 弱点。
+把评审记录写入 `REPORT.md` 第 6 节，最后再 `compile.py` 出终版 PDF（终版也须通过页面约束检查，并存为最后版本）。
 参考：`07-adversarial-review.md`、`scoring-rubric.md`。
 
 ---
 
 ## 交付物
 - `<slug>/paper/main.pdf` —— 终版论文
+- `<slug>/paper/versions/` —— **全部 PDF 版本**（v000 初稿、v001 审稿第1轮、v002 审稿第2轮…）
 - `<slug>/paper/main.tex`、`code/`、`figures/`、`data/`、`REPORT.md`（全过程可追溯）
 
 ## 原则
@@ -169,3 +172,4 @@ Workflow({ scriptPath: "<skill>/workflows/adversarial-review.js",
 - **排版即分数**：摘要/目录各一页、无大空白、无溢出 → 基础排版分不丢。
 - **对比即说服力**：每个模型必须有对比基准，用数据证明"为什么选这个模型"而非"我用了这个模型"。
 - **深度即区分度**：假设讨论必须到"若放宽→误差X%→结论是否逆转"的深度；缺点必须到"哪个参数、缺什么数据、量级多大"的粒度。
+- **版本即安全网**：每次编译自动留存 PDF 版本，审稿每轮有据可查，可回溯任何阶段的论文状态。

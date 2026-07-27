@@ -34,10 +34,21 @@
 ## 目标：5.0 → 7.5
 基线常在 5-6（基本完成但有硬伤），经 2-4 轮对抗修到 7.5+（省一级别）。每条弱点必须**可定位、可执行修法**，复评时逐条核对。
 
+## PDF 版本留存
+
+对抗审稿每轮修改后都会自动调用 `compile.py` 编译并留存版本 PDF 到 `paper/versions/`：
+- 基线版（审稿前）
+- 每轮修改版（第 1/2/3/4 轮）
+- 终版
+
+所有版本可通过文件名序号 (`main_v000.pdf` → `main_vNNN.pdf`) 追溯论文演进过程。
+
 ## 调用
 ```
 Workflow({ scriptPath: "<skill>/workflows/adversarial-review.js",
   args: { draftPath:"<slug>/paper/main.tex", lang:"zh",
-          targetScore:7.5, maxRounds:4, dataContext:"<关键结果数值>" }})
+          targetScore:7.5, maxRounds:4,
+          projectRoot:"<skill>",
+          dataContext:"<关键结果数值>" }})
 ```
 返回：finalScore、每轮评分记录、残留 high 弱点、各评审分维度。

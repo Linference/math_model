@@ -120,14 +120,10 @@
 
 ---
 
-## 编译与页面检查流程
-
----
-
-## 编译与页面检查流程
+## 编译、页面检查与 PDF 版本留存
 
 ```bash
-# 编译
+# 编译（自动留存版本到 paper/versions/main_vXXX.pdf）
 python <skill>/scripts/compile.py paper/main.tex
 
 # 编译后打开 PDF，逐页检查：
@@ -136,6 +132,21 @@ python <skill>/scripts/compile.py paper/main.tex
 # ③ 每页底部是否有 ≥3cm 空白？（有→检查 [H] 浮动体→改为 [htbp]）
 # ④ 是否有文字突出页边距？（有→公式换行/图表缩宽/\emergencystretch）
 ```
+
+### ⛔ PDF 版本留存机制
+
+`compile.py` 每次成功编译后自动把 PDF 复制到 `paper/versions/` 目录：
+- `main_v000.pdf` — 阶段 6 初稿（审稿前基线）
+- `main_v001.pdf` — 审稿第 1 轮修改后
+- `main_v002.pdf` — 审稿第 2 轮修改后
+- ……
+- `main.pdf` — 始终为最新版
+
+**规则**：
+- 每次编译自动递增版本号，无需手动管理
+- 阶段 7 每轮修改后必须重新编译（触发版本留存）
+- 所有版本提交到 git，确保可回溯任意阶段的论文状态
+- `paper/versions/` 目录加入 `.gitignore` 白名单（不被排除）
 
 失败读 `.log`；常见坑：缺宏包(MiKTeX 会提示装)、中文未用 xelatex、图片路径。
 

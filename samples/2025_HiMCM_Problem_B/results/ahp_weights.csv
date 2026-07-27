@@ -1,0 +1,13 @@
+indicator,global_weight,direction,label
+I1_grid_carbon,0.2915353530743786,cost,Grid Carbon Factor (kgCO2/kWh)
+I2_renewable,0.09717845102479288,benefit,Renewable Energy Share (%)
+I3_water_stress,0.06434966595659711,cost,Water Stress (WRI Score)
+I4_precipitation,0.021449888652199035,cost,Annual Precipitation (inches)
+I5_transit,0.15990357752211126,benefit,Public Transit Share (%)
+I6_pop_density,0.06101463420826386,benefit,Population Density (per sq mi)
+I12_airport,0.034922160391190685,cost,Airport Enplanements (Millions)
+I7_recycling,0.0700487872879162,benefit,Waste Recycling Rate (%)
+I8_feb_temp,0.048284189739671156,benefit,Feb Temperature Suitability
+I9_has_dome,0.09656837947934228,benefit,Stadium Has Dome (0/1)
+I10_leed,0.04105868449765274,benefit,Stadium LEED Level (0-4)
+I11_parkland,0.013686228165884246,benefit,Parkland (% city area)

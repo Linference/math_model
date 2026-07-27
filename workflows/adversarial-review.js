@@ -9,12 +9,13 @@ export const meta = {
   ],
 }
 
-// args: { draftPath, lang, targetScore, maxRounds, dataContext }
+// args: { draftPath, lang, targetScore, maxRounds, dataContext, projectRoot }
 const draftPath = (args && args.draftPath) || 'paper/main.tex'
 const lang = (args && args.lang) || 'zh'
 const TARGET = (args && args.targetScore) || 7.5
 const MAX_ROUNDS = Math.min((args && args.maxRounds) || 4, 4)
 const dataContext = (args && args.dataContext) || ''
+const projectRoot = (args && args.projectRoot) || '.'
 
 // 结构化打分 schema：三评审各自输出
 const REVIEW_SCHEMA = {
@@ -110,6 +111,14 @@ if (draft === 'MISSING' || draft.length < 50) {
 }
 
 phase('Baseline')
+// 基线编译并留存版本
+log('编译基线 PDF 并留存版本...')
+await agent(
+  `在终端运行: python ${projectRoot}/scripts/compile.py ${draftPath}
+编译完成后确认 PDF 是否生成成功。不要修改任何文件，只运行编译命令并报告结果。`,
+  { label: 'compile:baseline', phase: 'Baseline', agentType: 'mm-writer' }
+)
+
 let agg = aggregate(await panelReview(draft, 'Baseline'))
 log(`基线评分: ${agg.avg.toFixed(2)} / 10  （弱点 ${agg.allWeak.length} 条${agg.needExp ? '，需补实验' : ''}）`)
 
@@ -137,7 +146,12 @@ ${punch}${expNote}
 - 逐条回应弱点，不要遗漏 high 严重度项；
 - 涉及公式/推导错误必须改对；涉及结果不足按补充实验要求补齐；
 - 保持 LaTeX 可编译（中文用 xelatex/ctex）。
-完成后用一段话总结你改了什么、对应哪些弱点。`,
+
+⛔ 修改完成后，必须执行编译并留存版本 PDF：
+  在终端运行: python ${projectRoot}/scripts/compile.py ${draftPath}
+  编译成功后会自劬保存版本到 paper/versions/main_vXXX.pdf
+
+完成后用一段话总结你改了什么、对应哪些弱点，并确认编译是否通过。`,
     { label: `revise:r${round}`, phase: 'Revise', agentType: 'mm-writer' })
   log(`第 ${round} 轮修改完成: ${(revised || '').slice(0, 160)}`)
 
@@ -151,6 +165,14 @@ ${punch}${expNote}
 
 const passed = agg.avg >= TARGET
 log(passed ? `✅ 达标：${agg.avg.toFixed(2)} ≥ ${TARGET}` : `⏹ 用尽 ${MAX_ROUNDS} 轮，当前 ${agg.avg.toFixed(2)}`)
+
+// 终版编译 + 版本留存
+log('编译终版 PDF...')
+await agent(
+  `在终端运行: python ${projectRoot}/scripts/compile.py ${draftPath}
+编译完成后确认 PDF 已生成，版本已自动保存到 paper/versions/ 目录。`,
+  { label: 'compile:final', agentType: 'mm-writer' }
+)
 
 return {
   finalScore: Number(agg.avg.toFixed(2)),
