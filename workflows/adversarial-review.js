@@ -3,6 +3,7 @@ export const meta = {
   description: '数学建模论文多智能体对抗审稿：写作者↔审稿人/验证者/推理者并行挑战，≤4轮，评分达7.5停',
   whenToUse: '已有一份论文草稿（paper/main.tex 或 REPORT.md 内容）需要通过对抗协作提升到国赛级别时',
   phases: [
+    { title: 'Algorithm Audit', detail: '自动化算法审计：代码可运行性+公式一致性+数字可追溯' },
     { title: 'Baseline', detail: '三评审并行给出基线评分与弱点' },
     { title: 'Revise', detail: '写作者按意见修改' },
     { title: 'Re-review', detail: '三评审复评，判定是否达标' },
@@ -108,6 +109,43 @@ let draft = await loadDraft()
 if (draft === 'MISSING' || draft.length < 50) {
   log(`⚠️ 未找到有效草稿于 ${draftPath}，请先生成论文草稿再运行对抗审稿。`)
   return { error: 'no draft', draftPath }
+}
+
+// ⛔ 阶段 A：算法审计（审稿前必须执行的自动化验证）
+phase('Algorithm Audit')
+log('🔍 执行算法审计：代码可运行性 + 公式一致性 + 数字可追溯...')
+const auditResult = await agent(
+  `你是数学建模的【验证者】。在正式审稿之前，先执行自动化算法审计。
+
+请在终端依次运行以下命令，并报告结果：
+1. python ${projectRoot}/scripts/verify_results.py . --stage 4
+   （验证：代码可运行、随机种子、量纲一致性、关键数字可追溯）
+
+审计重点：
+- 每个 solve_q*.py 是否都能跑通？
+- 代码中的公式实现是否与 REPORT.md §2 方案表一致？
+- 论文中引用的关键数字是否能在代码输出中找到对应来源？
+- 有无量纲混用（如 kgCO2e 和 tCO2e 混用）？
+
+输出审计报告，格式：
+### 算法审计报告
+- 代码可运行: ✅/❌（如失败列出哪个文件报错）
+- 随机种子: ✅/❌（缺失文件列表）
+- 公式一致性: ✅/❌（不一致之处）
+- 数字可追溯: ✅/❌（无法追溯的数字列表）
+- 量纲一致性: ✅/❌（混用情况）
+- 审计结论: PASS / FAIL
+- 若 FAIL: 列出修复建议
+
+如果审计 FAIL，不要继续审稿，要求先修复代码问题。`,
+  { label: 'audit:algorithm', phase: 'Algorithm Audit', agentType: 'mm-verifier' }
+)
+log(`算法审计结果: ${(auditResult || '').slice(0, 300)}`)
+
+// 若审计不通过，中止审稿
+if (auditResult && auditResult.includes('FAIL')) {
+  log('⛔ 算法审计未通过，中止审稿。请先修复代码问题后重新运行。')
+  return { error: 'algorithm audit failed', auditResult }
 }
 
 phase('Baseline')
