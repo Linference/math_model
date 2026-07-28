@@ -239,7 +239,7 @@ python <skill>/scripts/new_project.py "<赛题名>" --lang zh   # 或 en
 写入 `REPORT.md` 第 2 节。
 
 > ⛔ 阶段 2 验证（5 项全部通过才可进入阶段 3）：参见上方"阶段 2 验证"表。
-> 参考：`02-framework.md`、`04-modeling-cookbook.md`、`09-innovation-playbook.md`。
+> 参考：`02-framework.md`、`04-modeling-cookbook.md`、`09-innovation-playbook.md`、`10-modeling-tricks.md`。
 
 ---
 

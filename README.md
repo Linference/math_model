@@ -134,6 +134,7 @@ math-modeling/
 │   ├── 07-adversarial-review.md   # 对抗审稿协议
 │   ├── 08-stage-verification.md  # 阶段验证协议（每阶段独立验证）
 │   ├── 09-innovation-playbook.md  # 模型创新方法手册（12种策略）
+│   ├── 10-modeling-tricks.md      # 数学建模实战优化技巧（33讲精华）
 │   ├── scoring-rubric.md          # 五维度评分细则（含锚点示例）
 │   └── data-sources.md            # 数据源目录
 │
