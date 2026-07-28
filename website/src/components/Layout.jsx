@@ -13,9 +13,9 @@ export default function Layout() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
+    <div className="min-h-screen">
       {/* Nav */}
-      <nav className="fixed top-0 w-full z-50 glass border-b border-white/5">
+      <nav className="fixed top-0 w-full z-50 glass-nav">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-sm font-semibold text-zinc-200 hover:text-white transition-colors">
             <span className="w-2 h-2 rounded-full bg-green-500" />
