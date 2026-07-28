@@ -221,9 +221,16 @@ python <skill>/scripts/new_project.py "<赛题名>" --lang zh   # 或 en
    - 可解释性要求是否高于预测精度？
    - 选择/不选 ML/DL 的具体代价是什么？
 
-3. **每问方案表**：方法 | 输入 | 输出 | ML/DL 判定+理由 | 必备图 | 验证方式
+3. **每问方案表（增强版）**：方法(主线) | 创新策略 | 输入 | 输出 | ML/DL 判定+理由 | 必备图 | 验证方式 | 风险+应对
 
-4. **⛔ 算法可行性预审**（新增——在选型阶段就排除不可行方案）：
+4. **⛔ 创新策略选型**（从 `09-innovation-playbook.md` 12 种策略中选取 1-2 种）：
+   - 评价/排序题 → 方法组合(策略1) + 改进(策略2) + 自适应权重(策略7)
+   - 优化题 → 混合模型(策略5) + 跨域迁移(策略9)
+   - 预测题 → 不确定性量化(策略8) + 集成预测(策略12)
+   - 机理题 → 机理+数据驱动(策略5) + 闭环反馈(策略10)
+   - 每项创新必须有对比实验证明价值（创新 vs 无创新版本）
+
+5. **⛔ 算法可行性预审**：
    - 每个方法标注计算复杂度
    - 标注收敛性条件（优化类）/ 适用条件（统计类）
    - 标注已知坑点（如 AHP 的 CR 检验、TOPSIS 的逆序问题）
@@ -232,13 +239,32 @@ python <skill>/scripts/new_project.py "<赛题名>" --lang zh   # 或 en
 写入 `REPORT.md` 第 2 节。
 
 > ⛔ 阶段 2 验证（5 项全部通过才可进入阶段 3）：参见上方"阶段 2 验证"表。
-> 参考：`02-framework.md`、`04-modeling-cookbook.md`。
+> 参考：`02-framework.md`、`04-modeling-cookbook.md`、`09-innovation-playbook.md`。
 
 ---
 
-### 阶段 3 — 数据获取
+### 阶段 3 — 数据获取（增强版）
 
-用 `Agent`（`mm-data-hunter`，带 WebSearch/WebFetch）按方案找数据，用 `<skill>/scripts/fetch_data.py` 落盘到 `data/`，来源记入 `data/SOURCES.md`。
+**三级搜索策略（优先用管线，兜底用 AI 搜索）**：
+
+1. **自动化管线**（优先）：
+   ```bash
+   python <skill>/scripts/fetch_data.py --sklearn iris          # 内置数据集
+   python <skill>/scripts/fetch_data.py --worldbank EN.ATM.CO2E.KT  # World Bank API
+   python <skill>/scripts/fetch_data.py --search climate energy  # 关键词→数据源建议
+   python <skill>/scripts/fetch_data.py --url <直链> --name <名> # 直链下载
+   ```
+
+2. **AI 辅助搜索**：WebSearch 找候选源 → WebFetch 确认字段/质量 → 直链下载
+
+3. **数据质量控制**：
+   ```bash
+   python <skill>/scripts/fetch_data.py --quality data/cities.csv  # 质量报告
+   python <skill>/scripts/fetch_data.py --merge a.csv b.csv --on city  # 多源合并
+   python <skill>/scripts/fetch_data.py --augment small.csv --n 500  # 小样本增强
+   ```
+
+落盘到 `data/`，来源记入 `data/SOURCES.md`（格式见 `03-data-acquisition.md`）。
 
 > ⛔ 阶段 3 验证（4 项全部通过才可进入阶段 4）：参见上方"阶段 3 验证"表。
 > 参考：`03-data-acquisition.md`、`data-sources.md`。

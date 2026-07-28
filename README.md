@@ -58,6 +58,8 @@
 - **无大空白、无文字溢出**：`\raggedbottom` + 浮动间距紧凑 + 容忍度优化
 - **高端可视化**：6 种基础图 + 10 种高端图（3D 曲面、雷达图、小提琴图、网络图、瀑布图、山脊图、流图等）
 - **四项深度要求**：假设局限性量化讨论 + 对比模型验证 + 创新点显式声明 + 多指标评估
+- **数据引擎增强**：World Bank/NOAA API + 自动质量报告 + 多源合并 + 小样本增强 + 关键词搜索建议
+- **创新方法手册**：12 种创新策略（组合→改进→跨域迁移→闭环反馈），按赛题类型选型指南
 - **自动交叉验证**：`verify_results.py` 比对代码输出与论文数字一致性
 - **中英双模板**：国赛 ctex/xelatex · 美赛 pdflatex，盲审就绪
 
@@ -131,7 +133,8 @@ math-modeling/
 │   ├── 06-writing.md              # 写作规范（页面约束+四项深度要求）
 │   ├── 07-adversarial-review.md   # 对抗审稿协议
 │   ├── 08-stage-verification.md  # 阶段验证协议（每阶段独立验证）
-│   ├── scoring-rubric.md          # 五维度评分细则
+│   ├── 09-innovation-playbook.md  # 模型创新方法手册（12种策略）
+│   ├── scoring-rubric.md          # 五维度评分细则（含锚点示例）
 │   └── data-sources.md            # 数据源目录
 │
 ├── templates/                     # LaTeX 模板
