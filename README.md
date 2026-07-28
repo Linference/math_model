@@ -23,20 +23,13 @@ Claude Code 的 API（Anthropic）在国内无法直接访问。推荐方案：
 
 ### 用 CCSwitch 让 Claude Code 走 DeepSeek
 
-**[CCSwitch](https://github.com/Linference/ccswitch/releases)** 是一个 Claude Code 代理切换工具，让 Claude Code 的请求转发到 DeepSeek V4 Pro，国内直连可用。
+**[CCSwitch](https://ccswitch.io)** 是一个免费的 Claude Code 桌面管理工具，可以配置 Claude Code 使用 DeepSeek V4 Pro 作为后端，国内直连。
 
-1. 下载 CCSwitch：[github.com/Linference/ccswitch/releases](https://github.com/Linference/ccswitch/releases)
-2. 安装后打开，填入 DeepSeek API Key（去 [platform.deepseek.com](https://platform.deepseek.com/) 注册获取）
-3. 启动 CCSwitch 代理，Claude Code 即可正常使用
+1. 去 [ccswitch.io](https://ccswitch.io) 下载安装（Windows `.msi` / macOS `brew install --cask cc-switch`）
+2. 打开 CCSwitch，添加 DeepSeek 提供商，填入 API Key（去 [platform.deepseek.com](https://platform.deepseek.com/) 注册获取）
+3. 选择 DeepSeek 为默认后端，Claude Code 即可正常使用
 
-```bash
-# CCSwitch 命令行方式
-git clone https://github.com/Linference/ccswitch.git
-cd ccswitch && npm install && npm link
-
-ccswitch config set --provider deepseek --api-key sk-xxx
-ccswitch proxy start    # 启动代理
-```
+> 官方 GitHub：[github.com/farion1231/cc-switch](https://github.com/farion1231/cc-switch)。CCSwitch 完全免费，只从官网下载。
 
 ### 装 Claude Code
 
