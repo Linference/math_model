@@ -12,7 +12,7 @@ export default function CodeBlock({ code, lang = '' }) {
   return (
     <div className="code-block group">
       {lang && (
-        <div className="px-4 pt-3 text-xs text-zinc-500 font-mono">{lang}</div>
+        <div className="px-4 pt-3 text-xs text-slate-400 font-mono">{lang}</div>
       )}
       <pre><code>{code}</code></pre>
       <button
