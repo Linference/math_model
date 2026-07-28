@@ -2,12 +2,21 @@
 
 [![Stars](https://img.shields.io/github/stars/Linference/math_model?style=social)](https://github.com/Linference/math_model/stargazers)
 [![Forks](https://img.shields.io/github/forks/Linference/math_model?style=social)](https://github.com/Linference/math_model/network/members)
+[![Version](https://img.shields.io/badge/version-v2.0-6f42c1)](https://github.com/Linference/math_model/blob/main/skill/CHANGELOG.md)
 [![Release](https://img.shields.io/github/v/release/Linference/math_model)](https://github.com/Linference/math_model/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-把数学建模赛题 PDF 丢进去，自动出论文。国赛 CUMCM / 美赛 MCM / HiMCM 都支持。
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python)
+![LaTeX](https://img.shields.io/badge/LaTeX-xelatex-008080?logo=latex)
+![Claude Code](https://img.shields.io/badge/Claude_Code-v2.0-D97757?logo=claude)
+![竞赛](https://img.shields.io/badge/CUMCM_|_MCM_|_HiMCM-e74c3c)
+![Subagent](https://img.shields.io/badge/质检-5_Gates-2ecc71)
 
-8 个 AI 子智能体分工协作：审题 → 选方法 → 找数据 → 写代码求解 → 画图 → 写论文编译 PDF → 三个评审角色并行批改 → 写作者反复修改直到达标。
+---
+
+**v2.0** — 多智能体对抗协作 + Subagent 独立质检 + 跨阶段状态管理。21 本参考手册、6 本算法 Cookbook、中英句式库、反模式知识库、环境自检脚本。
+
+把赛题 PDF 丢进去，自动走完审题 → 选方法 → 联网找数据 → Python 求解 → 可视化 → LaTeX 论文编译 → 三角色并行对抗审稿 → 终版 PDF。国赛 CUMCM / 美赛 MCM / HiMCM 全支持。
 
 ---
 
@@ -228,3 +237,45 @@ git clone https://github.com/Linference/math_model.git ~/.claude/skills/math-mod
 ## License
 
 MIT
+
+---
+
+## 项目更新历程
+
+### v2.0.0 (2026-07-28) — 架构升级
+
+**新增 Subagent 独立质检协议**：M1/P1/P2/W1/W2 五道门禁，写作者和质检者角色分离，FAIL 强制回溯。解决"自己写的代码自己审"的信任问题。
+
+**新增跨阶段状态管理**：`state/decision_log.json` 记录每阶段决策/参数/评分，流水线中断后可恢复，不再依赖聊天上下文。
+
+**参考手册全面升级**（6 本，3-13 倍行数增长）：
+- `02-framework.md` 61→541 行：三级问题判定体系、44 种方法速查表、ML/DL 决策框架、8 个选型反例
+- `03-data-acquisition.md` 97→695 行：8 类数据源速查表（含 API URL）、6 段完整获取代码、缺失值处理决策树
+- `05-visualization.md` 85→1144 行：16 种图表含代码骨架、5 套色觉友好配色、10 个 wrong→right 对照
+- `07-adversarial-review.md` 69→449 行：三角色评分锚点（0-10 五档）、评审模板、修改-复评循环协议
+- `data-sources.md` 33→367 行：分类数据源大全（经济/环境/气候/人口/交通/能源），每源含 API 端点
+- `scoring-rubric.md` 128→303 行：国赛+美赛双评分标准、五维度锚定描述、评分校准
+
+**新增文件**（8 个）：
+- `11-anti-patterns.md`（654 行）：24 个建模常见错误，症状→诊断→修复三段式
+- `13-phrase-bank.md`（401 行）：中英双语句式库，按章节组织，含美赛 Memo 专用
+- `cookbooks/`（6 本，~2200 行）：独立算法手册（优化/评价/预测/机理/统计ML/网络博弈）
+- `doctor.py`：37 项环境自检，一键 `python doctor.py`
+- `decision_log.json`：跨阶段状态模板
+- `assumption_table.md`：标准化假设表格（假设→论证→影响→违反后果）
+- `playbook-guide.md`：样本项目走通指南
+- `CHANGELOG.md`：本更新记录
+
+**SKILL.md 重写**：新增 Subagent 质检协议、路径解析协议、参考手册速查表、每阶段反模式检查项。从 404 行精简为 370 行。
+
+### v1.2 (2026-07-27) — 初始版本
+
+- 7 阶段强制流水线（0-7）+ 硬性门禁
+- 8 个子智能体（审题/建模/数据/编程/写作/审稿/验证/推理）
+- 三角色并行对抗审稿（Workflow 驱动，≤4 轮，targetScore 7.5）
+- 12 本参考手册（01-10 + data-sources + scoring-rubric）
+- 5 个辅助脚本（new_project/fetch_data/compile/plot_helpers/verify_results）
+- 中英双版 LaTeX 模板（cumcm-zh/mcm-en）
+- 四个深度要求（假设量化/对比模型/创新声明/多指标）
+- 数据引擎（World Bank API + 质量报告 + 多源合并 + 小样本增强）
+- 两个完整样本项目（2024 国赛 A + 2025 HiMCM B）
