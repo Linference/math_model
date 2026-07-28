@@ -81,10 +81,18 @@ CCSwitch 让 Claude Code 的请求走到 DeepSeek 而非 Anthropic，国内就�
    - Windows：下载 `.msi` 安装包
    - macOS：下载 `.dmg`，或用 `brew install --cask cc-switch`
    - Linux：下载 `.deb` / `.rpm` / `.AppImage`
-2. 安装后打开 CCSwitch，界面里点「添加提供商」→ 选 DeepSeek
-3. 去 [platform.deepseek.com](https://platform.deepseek.com/) 注册账号 → API Keys → 创建 Key，复制
-4. 回到 CCSwitch，把 Key 粘贴进去，设为默认后端
-5. 点「启动代理」
+2. 安装后打开 CCSwitch，点左侧「提供商」→「添加」，按以下填写：
+
+   | 配置项 | 填什么 |
+   |--------|--------|
+   | 提供商类型 | 选择 **DeepSeek** |
+   | API Key | 去 [platform.deepseek.com](https://platform.deepseek.com/) 注册 → API Keys → 创建 Key → 复制过来 |
+   | 模型 | 选 `deepseek-chat`（日常）或 `deepseek-reasoner`（推理更强） |
+   | Base URL | 保持默认 `https://api.deepseek.com` |
+
+   填完点「测试连接」，提示成功即可。
+
+3. 回到主界面，把刚添加的 DeepSeek 设为**默认后端**，点「启动代理」。状态栏显示绿色连接即表示生效。
 
 > CCSwitch 完全免费，只从 [ccswitch.io](https://ccswitch.io) 或 [GitHub](https://github.com/farion1231/cc-switch) 下载。任何收钱的都是假的。
 
