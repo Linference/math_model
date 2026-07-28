@@ -105,16 +105,85 @@ function panelReview(draft, phase) {
   return parallel(ROLES.map(([role, desc]) => () =>
     agent(reviewPrompt(role, desc, draft),
       { label: `review:${role}`, phase, schema: REVIEW_SCHEMA, agentType: 'mm-reviewer' })
+      .then(r => { if (r) r._role = role; return r })
   ))
 }
 
+// 角色×维度权重矩阵（来自 07-adversarial-review.md §1.3 + 15-scoring-rubric.md §4.1）
+const ROLE_WEIGHTS = {
+  '审稿人':   { modeling: 0.50, rigor: 0.20, results: 0.20, writing: 0.70, innovation: 0.60 },
+  '验证者':   { modeling: 0.20, rigor: 0.30, results: 0.60, writing: 0.10, innovation: 0.10 },
+  '推理者':   { modeling: 0.30, rigor: 0.50, results: 0.20, writing: 0.20, innovation: 0.30 },
+}
+const DIM_WEIGHTS = { modeling: 0.25, rigor: 0.25, results: 0.25, writing: 0.15, innovation: 0.10 }
+const DIM_NAMES = ['modeling', 'rigor', 'results', 'writing', 'innovation']
+
+// 聚合规则（来自 15-scoring-rubric.md §4.1–4.3）：
+//   步骤 1：每个维度按角色权重加权聚合
+//   步骤 2：维度加权得综合分
+//   步骤 3：应用硬上限规则
+//   步骤 4：离群值仲裁（极差 ≥ 4.0 → 中位数）
 function aggregate(reviews) {
   const valid = reviews.filter(Boolean)
-  if (!valid.length) return { avg: 0, reviews: [], allWeak: [], needExp: false }
-  const avg = valid.reduce((s, r) => s + r.score, 0) / valid.length
+  if (!valid.length) return { avg: 0, dimScores: {}, reviews: [], allWeak: [], needExp: false, arbitrated: false }
+
+  // 步骤 1：维度级加权聚合
+  const dimScores = {}
+  for (const dim of DIM_NAMES) {
+    let weightedSum = 0, weightSum = 0
+    const dimVals = []
+    for (const r of valid) {
+      if (r.dimensions && typeof r.dimensions[dim] === 'number') {
+        // 根据角色名匹配权重；若 agent 角色名未在 ROLE_WEIGHTS 中 → 回退为等权
+        const roleKey = Object.keys(ROLE_WEIGHTS).find(k => r._role && r._role.includes(k))
+        const w = roleKey ? (ROLE_WEIGHTS[roleKey][dim] || 1/3) : 1/3
+        weightedSum += r.dimensions[dim] * w
+        weightSum += w
+        dimVals.push(r.dimensions[dim])
+      }
+    }
+    // 离群值仲裁：极差 ≥ 4.0 → 中位数
+    if (dimVals.length >= 2) {
+      const range = Math.max(...dimVals) - Math.min(...dimVals)
+      if (range >= 4.0) {
+        dimVals.sort((a, b) => a - b)
+        const mid = Math.floor(dimVals.length / 2)
+        dimScores[dim] = dimVals.length % 2 ? dimVals[mid] : (dimVals[mid - 1] + dimVals[mid]) / 2
+        dimScores._arbitrated = dimScores._arbitrated || []
+        dimScores._arbitrated.push(dim)
+        continue
+      }
+    }
+    dimScores[dim] = weightSum > 0 ? weightedSum / weightSum : 0
+  }
+
+  // 步骤 2：维度加权 → 综合分
+  let composite = 0
+  for (const dim of DIM_NAMES) {
+    composite += (dimScores[dim] || 0) * (DIM_WEIGHTS[dim] || 0)
+  }
+
+  // 步骤 3：硬上限规则（来自 15-scoring-rubric.md §4.2）
+  const caps = []
+  if (dimScores.rigor < 5)                     caps.push({ cap: 6.0, reason: 'rigor < 5 → 综合分 ≤ 6.0' })
+  if (dimScores.results < 5)                   caps.push({ cap: 5.5, reason: 'results < 5 → 综合分 ≤ 5.5' })
+  if (dimScores.modeling < 3)                  caps.push({ cap: 4.0, reason: 'modeling < 3 → 综合分 ≤ 4.0' })
+  if (DIM_NAMES.some(d => dimScores[d] < 3))   caps.push({ cap: 4.0, reason: '任一维度 < 3 → 综合分 ≤ 4.0' })
+  if (DIM_NAMES.filter(d => dimScores[d] < 5).length >= 2)
+    caps.push({ cap: 5.0, reason: '两个及以上维度 < 5 → 综合分 ≤ 5.0' })
+
+  for (const c of caps) {
+    if (composite > c.cap) { composite = c.cap }
+  }
+  const effectiveCap = caps.length ? Math.min(...caps.map(c => c.cap)) : 10
+  composite = Math.min(composite, effectiveCap)
+
+  const avg = Math.round(composite * 100) / 100
   const allWeak = valid.flatMap(r => r.weaknesses || [])
   const needExp = valid.some(r => r.needMoreExperiments)
-  return { avg, reviews: valid, allWeak, needExp }
+  const arbitrated = !!dimScores._arbitrated
+
+  return { avg, dimScores, reviews: valid, allWeak, needExp, arbitrated, hardCaps: caps }
 }
 
 // ---- 主流程 ----
@@ -122,6 +191,33 @@ let draft = await loadDraft()
 if (draft === 'MISSING' || draft.length < 50) {
   log(`⚠️ 未找到有效草稿于 ${draftPath}，请先生成论文草稿再运行对抗审稿。`)
   return { error: 'no draft', draftPath }
+}
+
+// 算法审计结构化输出 schema
+const AUDIT_SCHEMA = {
+  type: 'object',
+  properties: {
+    codeRunnable: { type: 'boolean' },
+    randomSeedFixed: { type: 'boolean' },
+    formulaConsistency: { type: 'boolean' },
+    numberTraceable: { type: 'boolean' },
+    unitConsistency: { type: 'boolean' },
+    auditPassed: { type: 'boolean' },
+    failedItems: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          check: { type: 'string' },
+          file: { type: 'string' },
+          detail: { type: 'string' },
+        },
+        required: ['check', 'detail'],
+      },
+    },
+    summary: { type: 'string' },
+  },
+  required: ['codeRunnable', 'randomSeedFixed', 'formulaConsistency', 'numberTraceable', 'unitConsistency', 'auditPassed'],
 }
 
 // ⛔ 阶段 A：算法审计（审稿前必须执行的自动化验证）
@@ -140,31 +236,21 @@ const auditResult = await agent(
 - 论文中引用的关键数字是否能在代码输出中找到对应来源？
 - 有无量纲混用（如 kgCO2e 和 tCO2e 混用）？
 
-输出审计报告，格式：
-### 算法审计报告
-- 代码可运行: ✅/❌（如失败列出哪个文件报错）
-- 随机种子: ✅/❌（缺失文件列表）
-- 公式一致性: ✅/❌（不一致之处）
-- 数字可追溯: ✅/❌（无法追溯的数字列表）
-- 量纲一致性: ✅/❌（混用情况）
-- 审计结论: PASS / FAIL
-- 若 FAIL: 列出修复建议
-
-如果审计 FAIL，不要继续审稿，要求先修复代码问题。`,
-  { label: 'audit:algorithm', phase: 'Algorithm Audit', agentType: 'mm-verifier' }
+按 schema 输出审计报告，auditPassed 仅在所有检查项全部通过时才为 true。
+若任何一项 FAIL，auditPassed 必须为 false，并在 failedItems 中逐条列出。`,
+  { label: 'audit:algorithm', phase: 'Algorithm Audit', agentType: 'mm-verifier', schema: AUDIT_SCHEMA }
 )
-log(`算法审计结果: ${(auditResult || '').slice(0, 300)}`)
+log(`算法审计: ${auditResult?.auditPassed ? '✅ PASS' : '❌ FAIL'} — ${(auditResult?.summary || '').slice(0, 200)}`)
+if (auditResult?.failedItems?.length) {
+  for (const f of auditResult.failedItems) {
+    log(`  ❌ ${f.check}: ${f.file || ''} — ${f.detail}`)
+  }
+}
 
-// 若审计不通过（多重检测），中止审稿
-const auditFailed = auditResult && (
-  auditResult.includes('FAIL') ||
-  auditResult.includes('审计结论: FAIL') ||
-  auditResult.includes('❌') ||
-  (auditResult.includes('未通过') && !auditResult.includes('全部通过'))
-)
+// 使用结构化字段判定（替代原先脆弱的字符串匹配）
+const auditFailed = !auditResult || !auditResult.auditPassed
 if (auditFailed) {
   log('⛔ 算法审计未通过，中止审稿。请先修复代码问题后重新运行。')
-  log(`审计摘要: ${(auditResult || '').slice(0, 500)}`)
   return { error: 'algorithm audit failed', auditResult }
 }
 
@@ -178,7 +264,16 @@ await agent(
 )
 
 let agg = aggregate(await panelReview(draft, 'Baseline'))
-log(`基线评分: ${agg.avg.toFixed(2)} / 10  （弱点 ${agg.allWeak.length} 条${agg.needExp ? '，需补实验' : ''}）`)
+log(`基线评分: ${agg.avg.toFixed(2)} / 10（弱点 ${agg.allWeak.length} 条${agg.needExp ? '，需补实验' : ''}${agg.arbitrated ? ' ⚠️ 触发仲裁' : ''}）`)
+if (agg.dimScores && !agg.dimScores._arbitrated) {
+  log(`  维度: M=${agg.dimScores.modeling?.toFixed(1)} R=${agg.dimScores.rigor?.toFixed(1)} Res=${agg.dimScores.results?.toFixed(1)} W=${agg.dimScores.writing?.toFixed(1)} I=${agg.dimScores.innovation?.toFixed(1)}`)
+}
+if (agg.hardCaps?.length) {
+  for (const c of agg.hardCaps) log(`  ⚠️ 硬上限触发: ${c.reason}`)
+}
+if (agg.arbitrated) {
+  log(`  ⚠️ 仲裁维度: ${(agg.dimScores._arbitrated || []).join(', ')}（极差≥4.0，取中位数）`)
+}
 
 const history = [{ round: 0, score: agg.avg, weaknesses: agg.allWeak.length }]
 
@@ -218,7 +313,7 @@ ${punch}${expNote}
   phase('Re-review')
   agg = aggregate(await panelReview(draft, 'Re-review'))
   history.push({ round, score: agg.avg, weaknesses: agg.allWeak.length })
-  log(`第 ${round} 轮复评: ${agg.avg.toFixed(2)} / 10`)
+  log(`第 ${round} 轮复评: ${agg.avg.toFixed(2)} / 10${agg.arbitrated ? ' (仲裁)' : ''}  M=${agg.dimScores.modeling?.toFixed(1)} R=${agg.dimScores.rigor?.toFixed(1)} Res=${agg.dimScores.results?.toFixed(1)} W=${agg.dimScores.writing?.toFixed(1)} I=${agg.dimScores.innovation?.toFixed(1)}`)
 }
 
 const passed = agg.avg >= TARGET
@@ -237,6 +332,9 @@ return {
   target: TARGET,
   passed,
   rounds: history,
+  dimScores: agg.dimScores,
   remainingWeaknesses: agg.allWeak.filter(w => w.severity === 'high'),
-  perReviewer: agg.reviews.map(r => ({ score: r.score, verdict: r.verdict, dims: r.dimensions })),
+  perReviewer: agg.reviews.map(r => ({ role: r._role, score: r.score, verdict: r.verdict, dims: r.dimensions })),
+  hardCaps: agg.hardCaps || [],
+  arbitrated: agg.arbitrated || false,
 }
