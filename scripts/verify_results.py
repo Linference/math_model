@@ -42,9 +42,17 @@ def run_code(code_dir, py_file):
 
 
 def extract_numbers(text):
-    """从文本中提取所有数值（含单位）"""
-    pattern = r'([+-]?\d+\.?\d*(?:e[+-]?\d+)?)\s*([a-zA-Z%/°]*)'
-    return [(float(m[0]), m[1]) for m in re.findall(pattern, text)]
+    """从文本中提取所有数值（含单位）。匹配紧贴或空格分隔的数字+单位。"""
+    # 匹配: 100kgCO2e, 3.14%, -2.5e3, 1,538 kgCO2e/观众·日 等
+    pattern = r'([+-]?\d+\.?\d*(?:e[+-]?\d+)?)\s*([a-zA-Z%/°·一-鿿]*)'
+    matches = re.findall(pattern, text)
+    results = []
+    for m in matches:
+        try:
+            results.append((float(m[0]), m[1]))
+        except ValueError:
+            continue
+    return results
 
 
 def check_random_seeds(code_dir, py_files):
@@ -103,7 +111,8 @@ def verify_stage4(project_dir):
 
     py_files = find_py_files(code_dir)
     if not py_files:
-        print("❌ 未找到 solve_q*.py 文件")
+        print("❌ 未找到 solve_q*.py 文件，请检查 code/ 目录")
+        print("   期望文件命名格式: solve_q1.py, solve_q2.py, ...")
         return 1
 
     print(f"📂 找到 {len(py_files)} 个求解脚本\n")

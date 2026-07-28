@@ -142,9 +142,16 @@ const auditResult = await agent(
 )
 log(`算法审计结果: ${(auditResult || '').slice(0, 300)}`)
 
-// 若审计不通过，中止审稿
-if (auditResult && auditResult.includes('FAIL')) {
+// 若审计不通过（多重检测），中止审稿
+const auditFailed = auditResult && (
+  auditResult.includes('FAIL') ||
+  auditResult.includes('审计结论: FAIL') ||
+  auditResult.includes('❌') ||
+  (auditResult.includes('未通过') && !auditResult.includes('全部通过'))
+)
+if (auditFailed) {
   log('⛔ 算法审计未通过，中止审稿。请先修复代码问题后重新运行。')
+  log(`审计摘要: ${(auditResult || '').slice(0, 500)}`)
   return { error: 'algorithm audit failed', auditResult }
 }
 
