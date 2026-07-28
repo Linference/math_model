@@ -17,41 +17,105 @@
 
 ---
 
-## 国内用户看这里：环境怎么搭
+## 环境搭建（国内用户）
 
-Claude Code 的 API（Anthropic）在国内无法直接访问。推荐方案：
+Claude Code 的 API 在国内无法直连，需要用 CCSwitch 转发到 DeepSeek。下面是每一步的详细操作。
 
-### 用 CCSwitch 让 Claude Code 走 DeepSeek
+### 第一步：安装 Node.js
 
-**[CCSwitch](https://ccswitch.io)** 是一个免费的 Claude Code 桌面管理工具，可以配置 Claude Code 使用 DeepSeek V4 Pro 作为后端，国内直连。
+Claude Code 和 CCSwitch 都依赖 Node.js。如果你不确定装没装，打开终端（Win+R → 输入 `cmd` → 回车），输入 `node --version`，如果显示版本号且 ≥ v18 就跳过这一步。
 
-1. 去 [ccswitch.io](https://ccswitch.io) 下载安装（Windows `.msi` / macOS `brew install --cask cc-switch`）
-2. 打开 CCSwitch，添加 DeepSeek 提供商，填入 API Key（去 [platform.deepseek.com](https://platform.deepseek.com/) 注册获取）
-3. 选择 DeepSeek 为默认后端，Claude Code 即可正常使用
+**Windows：**
 
-> 官方 GitHub：[github.com/farion1231/cc-switch](https://github.com/farion1231/cc-switch)。CCSwitch 完全免费，只从官网下载。
+1. 打开 [nodejs.org/zh-cn](https://nodejs.org/zh-cn/)
+2. 点左边绿色的 **LTS** 按钮下载（标题类似 "v20.x.x 长期支持"）
+3. 双击 `.msi` 文件安装，一路点 Next 即可（所有选项保持默认）
+4. 装完后关闭终端重新打开，输入 `node --version` 验证
 
-### 装 Claude Code
+**macOS：**
 
 ```bash
-# 需要 Node.js ≥18.x：https://nodejs.org/zh-cn
+# 先装 Homebrew（如果没有）：去 https://brew.sh 复制安装命令
+brew install node
+```
+
+**Linux（Ubuntu/Debian）：**
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+验证安装成功：
+
+```bash
+node --version   # 应显示 ≥ v18.0.0
+npm --version    # 应显示 ≥ 9.0.0
+```
+
+---
+
+### 第二步：装 Claude Code
+
+打开终端，输入：
+
+```bash
 npm install -g @anthropic-ai/claude-code
 ```
 
-VSCode 用户直接搜 `Claude Code` 扩展安装，设置里填 API Key。
+装完后验证：
 
-### 跑起来
+```bash
+claude --version
+```
 
-在 Claude Code 中输入：
+> 如果装了 VSCode，也可以在扩展商店搜 `Claude Code` 安装图形界面版。安装后在 VSCode 设置里搜 `claude` 填 API Key。
+
+---
+
+### 第三步：装 CCSwitch，接入 DeepSeek
+
+CCSwitch 让 Claude Code 的请求走到 DeepSeek 而非 Anthropic，国内就能用。
+
+1. 打开 [ccswitch.io](https://ccswitch.io) → 点 Download
+   - Windows：下载 `.msi` 安装包
+   - macOS：下载 `.dmg`，或用 `brew install --cask cc-switch`
+   - Linux：下载 `.deb` / `.rpm` / `.AppImage`
+2. 安装后打开 CCSwitch，界面里点「添加提供商」→ 选 DeepSeek
+3. 去 [platform.deepseek.com](https://platform.deepseek.com/) 注册账号 → API Keys → 创建 Key，复制
+4. 回到 CCSwitch，把 Key 粘贴进去，设为默认后端
+5. 点「启动代理」
+
+> CCSwitch 完全免费，只从 [ccswitch.io](https://ccswitch.io) 或 [GitHub](https://github.com/farion1231/cc-switch) 下载。任何收钱的都是假的。
+
+---
+
+### 第四步：安装本项目 Skills
+
+```bash
+git clone https://github.com/Linference/math_model.git ~/.claude/skills/math-modeling
+```
+
+没有 Git 的话，去 [Releases](https://github.com/Linference/math_model/releases) 下载 `skill-v3.1.zip`，手动解压到 `C:\Users\你的用户名\.claude\skills\math-modeling\`（Windows）或 `~/.claude/skills/math-modeling/`（macOS/Linux）。
+
+---
+
+### 第五步：跑起来
+
+打开终端，输入 `claude` 启动，然后输入：
 
 ```
 /math-modeling
-[粘贴赛题原文]
+[粘贴赛题原文，或拖入 PDF 文件]
 ```
 
-### 如果不想折腾 Claude Code
+系统会自动按阶段执行：审题 → 选方法 → 找数据 → 写代码 → 画图 → 写论文 → 编译 PDF → 对抗审稿。
 
-直接把 `skill/SKILL.md` 的内容当系统提示词，用 DeepSeek 网页版 ([chat.deepseek.com](https://chat.deepseek.com)) 或 API 手动按阶段跑，效果也够用。
+---
+
+### 如果实在不想折腾
+
+直接把 `skill/SKILL.md` 的内容复制粘贴到 [DeepSeek 网页版](https://chat.deepseek.com) 的对话框里当系统提示词，然后把赛题贴进去，手动一步步让 AI 帮你做。麻烦一点，但也能用。
 
 ---
 
