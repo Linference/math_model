@@ -229,7 +229,8 @@ def verify_stage6(project_dir):
         with open(tex_path, "r", encoding="utf-8", errors="ignore") as f:
             tex_content = f.read()
         ref_count = len(re.findall(r'\\ref\{fig:', tex_content))
-        print(f"\n图引用检查：figures/ PNG={png_count} | \\ref{{fig: 引用={ref_count}}")
+        ref_label = r'\ref{fig:'
+        print(f"\n图引用检查：figures/ PNG={png_count} | {ref_label} 引用={ref_count}")
         if ref_count < png_count:
             print(f"⚠ 有 {png_count - ref_count} 张图未被正文引用")
         else:
