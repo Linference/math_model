@@ -2,19 +2,32 @@
 
 [![Stars](https://img.shields.io/github/stars/Linference/math_model?style=social)](https://github.com/Linference/math_model/stargazers)
 [![Forks](https://img.shields.io/github/forks/Linference/math_model?style=social)](https://github.com/Linference/math_model/network/members)
-[![Version](https://img.shields.io/badge/version-v2.0-6f42c1)](https://github.com/Linference/math_model/blob/main/skill/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-v2.2-6f42c1)](https://github.com/Linference/math_model/blob/main/skill/CHANGELOG.md)
 [![Release](https://img.shields.io/github/v/release/Linference/math_model)](https://github.com/Linference/math_model/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python)
 ![LaTeX](https://img.shields.io/badge/LaTeX-xelatex-008080?logo=latex)
-![Claude Code](https://img.shields.io/badge/Claude_Code-v2.0-D97757?logo=claude)
+![Claude Code](https://img.shields.io/badge/Claude_Code-v2.2-D97757?logo=claude)
 ![竞赛](https://img.shields.io/badge/CUMCM_|_MCM_|_HiMCM-e74c3c)
-![Subagent](https://img.shields.io/badge/质检-5_Gates-2ecc71)
+![Subagent](https://img.shields.io/badge/质检-9_Gates-2ecc71)
 
 ---
 
-**v2.0** — 多智能体对抗协作 + Subagent 独立质检 + 跨阶段状态管理。21 本参考手册、6 本算法 Cookbook、中英句式库、反模式知识库、环境自检脚本。
+<div align="center">
+
+### 🌐 语言 | Language | 言語 | 언어
+
+**默认显示中文 · Click to switch language**
+
+</div>
+
+---
+
+<details open>
+<summary><b>🇨🇳 中文</b>（默认）</summary>
+
+**v2.2** — 多智能体对抗协作 + Subagent 独立质检（9 道门禁）+ 反模式硬阻断 + 人工在环检查点 + 跨阶段状态管理。21 本参考手册、6 本算法 Cookbook、中英句式库、反模式知识库、环境自检脚本。
 
 把赛题 PDF 丢进去，自动走完审题 → 选方法 → 联网找数据 → Python 求解 → 可视化 → LaTeX 论文编译 → 三角色并行对抗审稿 → 终版 PDF。国赛 CUMCM / 美赛 MCM / HiMCM 全支持。
 
@@ -141,12 +154,12 @@ git clone https://github.com/Linference/math_model.git ~/.claude/skills/math-mod
 ```
 math_model/
 ├── README.md
-├── samples/                      # 两个完整示例
+├── samples/                      # 完整示例
 │   ├── 2024_CUMCM_A/             # 国赛A题：板凳龙
 │   └── 2025_HiMCM_Problem_B/     # HiMCM B题：超级碗选址
 └── skill/                        # Skills 安装包
     ├── SKILL.md                  # 主技能定义
-    ├── references/               # 12本参考手册
+    ├── references/               # 15本参考手册 + 6本Cookbook
     ├── scripts/                  # 辅助脚本
     ├── templates/                # LaTeX模板（中英双版）
     └── workflows/                # 审稿工作流
@@ -183,6 +196,10 @@ math_model/
 ## 对抗审稿
 
 三个评审角色并行批改同一份论文——审稿人看建模合理性，验证者核对数值，推理者审计公式。写作者逐条修改后三评审重新打分，均分不到 7.5 继续改，最多 4 轮。
+
+## 质量门禁（v2.2）
+
+9 道 Subagent 独立质检门禁 + 反模式硬阻断 + 人工在环检查点，确保流水线每个环节的输出质量。
 
 ---
 
@@ -242,40 +259,324 @@ MIT
 
 ## 项目更新历程
 
+### v2.2.0 — 深度剖析修复（当前版本）
+
+- **Bug 修复**：评分聚合从简单平均改为角色×维度加权矩阵 + 硬上限规则 + 离群值仲裁
+- **反模式硬阻断 (A1/A2/A3)**：代码/写作/全维度三道反模式扫描，High 命中必须退回
+- **数据质量独立质检 (D1)**：阶段 3 新增缺失值+异常值+多源对齐门禁
+- **人工在环检查点**：阶段 1/4/6 后暂停，将关键产物呈现给用户确认
+- 门禁体系从 5 道扩展为 9 道
+
+### v2.1.0 (2026-07-28) — 知识嵌入 + 文献综述
+
+- 8 个 Agent 定义全面升级（薄→厚），嵌入领域知识
+- 新增阶段 1.5 文献综述（国一必备）
+- 增强创新验证：消融实验 + 3 基线对比 + 多场景验证
+
 ### v2.0.0 (2026-07-28) — 架构升级
 
-**新增 Subagent 独立质检协议**：M1/P1/P2/W1/W2 五道门禁，写作者和质检者角色分离，FAIL 强制回溯。解决"自己写的代码自己审"的信任问题。
-
-**新增跨阶段状态管理**：`state/decision_log.json` 记录每阶段决策/参数/评分，流水线中断后可恢复，不再依赖聊天上下文。
-
-**参考手册全面升级**（6 本，3-13 倍行数增长）：
-- `02-framework.md` 61→541 行：三级问题判定体系、44 种方法速查表、ML/DL 决策框架、8 个选型反例
-- `03-data-acquisition.md` 97→695 行：8 类数据源速查表（含 API URL）、6 段完整获取代码、缺失值处理决策树
-- `05-visualization.md` 85→1144 行：16 种图表含代码骨架、5 套色觉友好配色、10 个 wrong→right 对照
-- `07-adversarial-review.md` 69→449 行：三角色评分锚点（0-10 五档）、评审模板、修改-复评循环协议
-- `data-sources.md` 33→367 行：分类数据源大全（经济/环境/气候/人口/交通/能源），每源含 API 端点
-- `scoring-rubric.md` 128→303 行：国赛+美赛双评分标准、五维度锚定描述、评分校准
-
-**新增文件**（8 个）：
-- `11-anti-patterns.md`（654 行）：24 个建模常见错误，症状→诊断→修复三段式
-- `13-phrase-bank.md`（401 行）：中英双语句式库，按章节组织，含美赛 Memo 专用
-- `cookbooks/`（6 本，~2200 行）：独立算法手册（优化/评价/预测/机理/统计ML/网络博弈）
-- `doctor.py`：37 项环境自检，一键 `python doctor.py`
-- `decision_log.json`：跨阶段状态模板
-- `assumption_table.md`：标准化假设表格（假设→论证→影响→违反后果）
-- `playbook-guide.md`：样本项目走通指南
-- `CHANGELOG.md`：本更新记录
-
-**SKILL.md 重写**：新增 Subagent 质检协议、路径解析协议、参考手册速查表、每阶段反模式检查项。从 404 行精简为 370 行。
+- 新增 Subagent 独立质检协议（5 道门禁）
+- 新增跨阶段状态管理
+- 参考手册全面升级（6 本，3-13 倍行数增长）
+- 新增 8 个文件（反模式手册、句式库、Cookbook、环境自检等）
 
 ### v1.2 (2026-07-27) — 初始版本
 
-- 7 阶段强制流水线（0-7）+ 硬性门禁
-- 8 个子智能体（审题/建模/数据/编程/写作/审稿/验证/推理）
-- 三角色并行对抗审稿（Workflow 驱动，≤4 轮，targetScore 7.5）
-- 12 本参考手册（01-10 + data-sources + scoring-rubric）
-- 5 个辅助脚本（new_project/fetch_data/compile/plot_helpers/verify_results）
-- 中英双版 LaTeX 模板（cumcm-zh/mcm-en）
-- 四个深度要求（假设量化/对比模型/创新声明/多指标）
-- 数据引擎（World Bank API + 质量报告 + 多源合并 + 小样本增强）
-- 两个完整样本项目（2024 国赛 A + 2025 HiMCM B）
+- 7 阶段强制流水线 + 8 个子智能体 + 三角色对抗审稿
+
+</details>
+
+<details>
+<summary><b>🇺🇸 English</b></summary>
+
+**v2.2** — Multi-agent adversarial collaboration + 9 independent QA gates + anti-pattern hard blocks + human-in-the-loop checkpoints + cross-stage state management. 21 reference manuals, 6 algorithm cookbooks, bilingual phrase bank, anti-pattern knowledge base, environment doctor script.
+
+Drop in a contest problem PDF, and the system automatically runs through: problem analysis → method selection → web data hunting → Python solving → visualization → LaTeX paper compilation → 3-role parallel adversarial review → final PDF. Supports CUMCM (China), MCM/ICM (USA), and HiMCM.
+
+---
+
+## Quick Start
+
+### Prerequisites
+
+- **Node.js** ≥ v18 ([nodejs.org](https://nodejs.org/))
+- **Claude Code**: `npm install -g @anthropic-ai/claude-code`
+- (China users) **CCSwitch**: [ccswitch.io](https://ccswitch.io) — routes Claude Code API calls through DeepSeek
+
+### Install
+
+```bash
+git clone https://github.com/Linference/math_model.git ~/.claude/skills/math-modeling
+```
+
+Or download the ZIP from [Releases](https://github.com/Linference/math_model/releases).
+
+### Run
+
+```bash
+claude
+/math-modeling
+[paste contest problem or drag in PDF]
+```
+
+---
+
+## 7-Stage Pipeline
+
+| Stage | Task | Output |
+|:--:|------|------|
+| 0 | Project scaffolding | Standard directory skeleton |
+| 1 | Deep problem analysis | Structured analysis report (2000+ words) |
+| 2 | Method selection + ML/DL decision | Modeling plan with chart checklist |
+| 3 | Web data hunting | CSV files + SOURCES.md |
+| 4 | Python implementation | Runnable scripts + numerical results |
+| 5 | Visualization (16 chart types) | High-quality figures (300 DPI) |
+| 6 | LaTeX writing + compilation | Paper draft |
+| 7 | 3-role adversarial review | Final PDF (score ≥ 7.5/10) |
+
+## 8 Sub-agents
+
+| Agent | Role |
+|------|------|
+| `mm-problem-analyst` | Problem analysis: decompose questions, find constraints & traps |
+| `mm-modeler` | Method selection: ML/DL decisions, chart planning |
+| `mm-data-hunter` | Data: search Wikipedia/GitHub/Kaggle/sklearn |
+| `mm-coder` | Implementation: Python solving + visualization |
+| `mm-writer` | Writing: fill LaTeX template, address review feedback |
+| `mm-reviewer` | Review: 5-dimension scoring, find weaknesses |
+| `mm-verifier` | Verification: cross-check numbers, units, boundary conditions |
+| `mm-reasoner` | Reasoning: audit formula derivations, fill proof gaps |
+
+## Adversarial Review
+
+Three reviewer roles evaluate the same paper in parallel — Reviewer (modeling quality), Verifier (numerical accuracy), Reasoner (mathematical rigor). The Writer addresses each issue, then all three re-score. Loop continues until average score ≥ 7.5 or max 4 rounds.
+
+## Quality Gates (v2.2)
+
+9 independent Subagent QA gates + anti-pattern hard blocks + human-in-the-loop checkpoints ensuring output quality at every stage.
+
+---
+
+## Project Structure
+
+```
+math_model/
+├── README.md
+├── samples/                      # Full example projects
+│   ├── 2024_CUMCM_A/             # CUMCM Problem A
+│   └── 2025_HiMCM_Problem_B/     # HiMCM Problem B
+└── skill/                        # Skill installation package
+    ├── SKILL.md                  # Main skill definition
+    ├── references/               # 15 manuals + 6 cookbooks
+    ├── scripts/                  # Helper scripts
+    ├── templates/                # LaTeX templates (CN/EN)
+    └── workflows/                # Review workflows
+```
+
+---
+
+## Sample Projects
+
+### 2024 CUMCM A — Dragon Bench Motion
+
+Model the motion trajectory of 223 bench sections along an Archimedean spiral, detect collisions, and optimize turnaround paths. Techniques: chord-length constrained binary search, SAT collision detection, constrained nonlinear optimization.
+
+### 2025 HiMCM B — Super Bowl Sustainable Host City Selection
+
+Build an environmental-only site selection model for NFL, evaluate 19 historical + 3 candidate cities, extend to Olympics. Techniques: AHP + TOPSIS two-tier decision making, Scope 1/2/3 carbon emission analysis, sensitivity analysis.
+
+---
+
+## License
+
+MIT
+
+</details>
+
+<details>
+<summary><b>🇯🇵 日本語</b></summary>
+
+**v2.2** — マルチエージェント敵対的協調 + 9つの独立QAゲート + アンチパターンハードブロック + ヒューマンインザループチェックポイント + クロスステージ状態管理。21冊のリファレンスマニュアル、6冊のアルゴリズムクックブック、日中英フレーズバンク、アンチパターン知識ベース、環境診断スクリプト。
+
+コンテスト問題のPDFを投入するだけで、問題分析 → 手法選択 → Webデータ収集 → Python求解 → 可視化 → LaTeX論文コンパイル → 3役割並列敵対的レビュー → 最終PDFまでを自動実行。CUMCM（中国）、MCM/ICM（米国）、HiMCMに対応。
+
+---
+
+## クイックスタート
+
+### 前提条件
+
+- **Node.js** ≥ v18 ([nodejs.org](https://nodejs.org/))
+- **Claude Code**: `npm install -g @anthropic-ai/claude-code`
+
+### インストール
+
+```bash
+git clone https://github.com/Linference/math_model.git ~/.claude/skills/math-modeling
+```
+
+または [Releases](https://github.com/Linference/math_model/releases) からZIPをダウンロード。
+
+### 実行
+
+```bash
+claude
+/math-modeling
+[コンテスト問題を貼り付け、またはPDFをドラッグ]
+```
+
+---
+
+## 7段階パイプライン
+
+| 段階 | タスク | 成果物 |
+|:--:|------|------|
+| 0 | プロジェクト足場 | 標準ディレクトリ構造 |
+| 1 | 詳細な問題分析 | 構造化分析レポート（2000字以上） |
+| 2 | 手法選択 + ML/DL判断 | モデリング計画 + 図表チェックリスト |
+| 3 | Webデータ収集 | CSVファイル + SOURCES.md |
+| 4 | Python実装 | 実行可能スクリプト + 数値結果 |
+| 5 | 可視化（16種類の図表） | 高品質図表（300 DPI） |
+| 6 | LaTeX執筆 + コンパイル | 論文草稿 |
+| 7 | 3役割敵対的レビュー | 最終PDF（スコア ≥ 7.5/10） |
+
+## 8つのサブエージェント
+
+| エージェント | 役割 |
+|------|------|
+| `mm-problem-analyst` | 問題分析：設問分解、制約・罠の発見 |
+| `mm-modeler` | 手法選択：ML/DL判断、図表計画 |
+| `mm-data-hunter` | データ：Wikipedia/GitHub/Kaggle/sklearn検索 |
+| `mm-coder` | 実装：Python求解 + 可視化 |
+| `mm-writer` | 執筆：LaTeXテンプレート記入、レビュー対応 |
+| `mm-reviewer` | レビュー：5次元採点、弱点発見 |
+| `mm-verifier` | 検証：数値・単位・境界条件クロスチェック |
+| `mm-reasoner` | 推論：数式導出監査、証明ギャップ補完 |
+
+## 敵対的レビュー
+
+3つのレビュアー役割が同じ論文を並列評価 — レビュアー（モデリング品質）、検証者（数値正確性）、推論者（数学的厳密性）。ライターが各指摘に対応し、3者が再採点。平均スコア ≥ 7.5または最大4ラウンドまで繰り返し。
+
+## 品質ゲート（v2.2）
+
+9つの独立Subagent QAゲート + アンチパターンハードブロック + ヒューマンインザループチェックポイントにより、各段階の出力品質を確保。
+
+---
+
+## プロジェクト構成
+
+```
+math_model/
+├── README.md
+├── samples/                      # 完全なサンプルプロジェクト
+│   ├── 2024_CUMCM_A/             # CUMCM 問題A
+│   └── 2025_HiMCM_Problem_B/     # HiMCM 問題B
+└── skill/                        # スキルインストールパッケージ
+    ├── SKILL.md                  # メインスキル定義
+    ├── references/               # 15冊マニュアル + 6冊クックブック
+    ├── scripts/                  # ヘルパースクリプト
+    ├── templates/                # LaTeXテンプレート（中/英）
+    └── workflows/                # レビューワークフロー
+```
+
+---
+
+## ライセンス
+
+MIT
+
+</details>
+
+<details>
+<summary><b>🇰🇷 한국어</b></summary>
+
+**v2.2** — 다중 에이전트 적대적 협업 + 9개 독립 QA 게이트 + 안티패턴 하드 블록 + 휴먼인더루프 체크포인트 + 교차 단계 상태 관리. 21권의 참조 매뉴얼, 6권의 알고리즘 쿡북, 중영일 구문 은행, 안티패턴 지식 베이스, 환경 진단 스크립트.
+
+대회 문제 PDF를 넣으면 문제 분석 → 방법 선택 → 웹 데이터 수집 → Python 해결 → 시각화 → LaTeX 논문 컴파일 → 3역할 병렬 적대적 검토 → 최종 PDF까지 자동 실행. CUMCM(중국), MCM/ICM(미국), HiMCM을 지원합니다.
+
+---
+
+## 빠른 시작
+
+### 사전 요구사항
+
+- **Node.js** ≥ v18 ([nodejs.org](https://nodejs.org/))
+- **Claude Code**: `npm install -g @anthropic-ai/claude-code`
+
+### 설치
+
+```bash
+git clone https://github.com/Linference/math_model.git ~/.claude/skills/math-modeling
+```
+
+또는 [Releases](https://github.com/Linference/math_model/releases)에서 ZIP 다운로드.
+
+### 실행
+
+```bash
+claude
+/math-modeling
+[대회 문제 붙여넣기 또는 PDF 드래그]
+```
+
+---
+
+## 7단계 파이프라인
+
+| 단계 | 작업 | 산출물 |
+|:--:|------|------|
+| 0 | 프로젝트 스캐폴딩 | 표준 디렉토리 구조 |
+| 1 | 심층 문제 분석 | 구조화된 분석 보고서 (2000자 이상) |
+| 2 | 방법 선택 + ML/DL 결정 | 모델링 계획 + 차트 체크리스트 |
+| 3 | 웹 데이터 수집 | CSV 파일 + SOURCES.md |
+| 4 | Python 구현 | 실행 가능한 스크립트 + 수치 결과 |
+| 5 | 시각화 (16가지 차트 유형) | 고품질 그림 (300 DPI) |
+| 6 | LaTeX 작성 + 컴파일 | 논문 초안 |
+| 7 | 3역할 적대적 검토 | 최종 PDF (점수 ≥ 7.5/10) |
+
+## 8개 서브 에이전트
+
+| 에이전트 | 역할 |
+|------|------|
+| `mm-problem-analyst` | 문제 분석: 질문 분해, 제약 조건 및 함정 발견 |
+| `mm-modeler` | 방법 선택: ML/DL 결정, 차트 계획 |
+| `mm-data-hunter` | 데이터: Wikipedia/GitHub/Kaggle/sklearn 검색 |
+| `mm-coder` | 구현: Python 해결 + 시각화 |
+| `mm-writer` | 작성: LaTeX 템플릿 작성, 검토 의견 반영 |
+| `mm-reviewer` | 검토: 5차원 채점, 약점 발견 |
+| `mm-verifier` | 검증: 수치, 단위, 경계 조건 교차 확인 |
+| `mm-reasoner` | 추론: 공식 유도 감사, 증명 간격 보완 |
+
+## 적대적 검토
+
+세 명의 검토자 역할이 동일한 논문을 병렬 평가 — 검토자(모델링 품질), 검증자(수치 정확성), 추론자(수학적 엄격성). 작성자가 각 지적사항을 수정하고 세 명이 재채점. 평균 점수 ≥ 7.5 또는 최대 4라운드까지 반복.
+
+## 품질 게이트 (v2.2)
+
+9개 독립 Subagent QA 게이트 + 안티패턴 하드 블록 + 휴먼인더루프 체크포인트로 각 단계의 출력 품질을 보장합니다.
+
+---
+
+## 프로젝트 구조
+
+```
+math_model/
+├── README.md
+├── samples/                      # 완전한 예제 프로젝트
+│   ├── 2024_CUMCM_A/             # CUMCM 문제 A
+│   └── 2025_HiMCM_Problem_B/     # HiMCM 문제 B
+└── skill/                        # 스킬 설치 패키지
+    ├── SKILL.md                  # 메인 스킬 정의
+    ├── references/               # 15개 매뉴얼 + 6개 쿡북
+    ├── scripts/                  # 헬퍼 스크립트
+    ├── templates/                # LaTeX 템플릿 (중/영)
+    └── workflows/                # 검토 워크플로우
+```
+
+---
+
+## 라이선스
+
+MIT
+
+</details>
