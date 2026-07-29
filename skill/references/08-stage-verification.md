@@ -122,6 +122,37 @@ for f in os.listdir('data/'):
 不通过：缺来源 → 补记录；模拟数据 → 显式标注"模拟"
 ```
 
+### 3.4 缺失值与异常值（v2.1 D1 门禁新增）
+
+```bash
+# 缺失值检查
+python -c "
+import pandas as pd, os
+for f in os.listdir('data/'):
+    if f.endswith('.csv'):
+        df = pd.read_csv(f'data/{f}')
+        missing = df.isnull().sum()
+        missing_pct = (missing / len(df) * 100).round(1)
+        if missing.sum() > 0:
+            print(f'{f}: 缺失值 — {dict(missing_pct[missing_pct > 0])}')
+"
+```
+
+```
+检查项：缺失 > 20% 的列必须有处理策略说明
+不通过：有缺失但无策略 → 补说明
+
+检查项：IQR 或 Z-score > 3 扫描异常值
+不通过：有异常值未处理/未标注 → 逐条说明
+```
+
+### 3.5 D1 独立质检（v2.1 新增）
+
+阶段 3 验证通过后，派发 `mm-verifier` Subagent 执行 D1 质检：
+- 运行 `fetch_data.py --quality` 检查所有 CSV
+- 核实 SOURCES.md 完整性
+- PASS/FAIL + 签名写入 REPORT.md
+
 ---
 
 ## 阶段 4 验证：算法正确性（⛔ 最关键）
@@ -192,6 +223,26 @@ echo "ALL PASSED"
   电网碳因子权重 0.2915    → solve_q2.py:88,   变量 global_weights[0]
 
 不通过：有数字无法追溯 → 确保每个数字有明确出处
+```
+
+### 4.8 A1 反模式硬阻断（v2.1 新增 ⛔）
+
+P2 通过后，派发 `mm-verifier` 执行代码级反模式扫描：
+
+```
+检查项：对照 11-anti-patterns.md §1+§2+§4 逐条检查
+重点检查：
+  - 过拟合（R² 训练 vs 测试 差 > 0.15）
+  - 数据泄露（标准化在 split 之前）
+  - 量纲混用（kgCO2e 和 tCO2e 混用）
+  - AHP 缺 CR 检验
+  - p-hacking（多检验未校正）
+  - 随机种子未固定
+  - 无异常处理（result.success 未检查）
+  - 硬编码路径
+
+不通过：任何 High 命中 → 必须退回修复，不可携带进入阶段 5
+PASS 签名含命中的 Medium/Low 条目及处置说明
 ```
 
 ---
@@ -276,6 +327,23 @@ ls figures/*.png | wc -l
 python <skill>/scripts/verify_results.py <slug> --stage 6
 ```
 
+### 6.6 A2 写作反模式硬阻断（v2.1 新增 ⛔）
+
+正文写作完成后、编译前，派发 `mm-reviewer` 执行：
+
+```
+检查项：对照 11-anti-patterns.md §3 + 13-phrase-bank.md 黑名单
+重点检查：
+  - 摘要无量化数字（< 4 个）
+  - 图表无解读文字（裸 \ref 引用）
+  - 假设无依据（只列假设不说明为什么）
+  - 套话黑名单命中（"随着社会的发展""本文首次""具有重要的理论意义"）
+  - 符号未在符号表定义
+  - 结论超出数据/模型支持范围
+
+不通过：任何 High 命中 → 必须退回修复
+```
+
 ---
 
 ## 阶段 7 验证：审稿闭环
@@ -312,4 +380,14 @@ python <skill>/scripts/verify_results.py <slug> --stage 6
 ```
 检查项：终版残留 high 级别弱点 ≤ 1 个
 不通过：high 弱点 ≥ 2 个 → 继续修改或标注为"已知限制"
+```
+
+### 7.5 A3 全维度反模式终扫（v2.1 新增 ⛔）
+
+终版编译前，派发 `mm-reviewer` 执行最终反模式扫描：
+
+```
+检查项：对照 11-anti-patterns.md 全部 22 条逐条终扫
+这是最后一道防线——任何 High 命中 → 退回修复后重新编译，再次 A3 直到 0 High
+A3 PASS 签名写入 REPORT.md §7，作为论文可提交的最终质量背书
 ```

@@ -1,5 +1,49 @@
 # Changelog
 
+## v2.2.0 (2026-07-29) — 国一冲刺版：Agent 知识嵌入 + 文献综述 + 创新增强
+
+### 核心升级：Agent 从"薄提示"到"厚知识体"
+v2.1 及之前版本的 Agent 定义仅 25-47 行，本质是角色描述，没有嵌入参考手册的领域知识。
+v2.2 将全部 8 个 Agent 重写为 60-120 行，嵌入：
+- **开工前必读指令**：每个 Agent 开工前必须读取的关键参考文件
+- **决策框架/检查清单**：将参考手册的核心方法论嵌入 Agent 的 system prompt
+- **反模式自检**：直接引用 11-anti-patterns.md 的具体条目
+- **评分锚点**（mm-reviewer/mm-verifier/mm-reasoner）：嵌入五维度评分锚定值和角色权重
+
+| Agent | v2.1 行数 | v2.2 行数 | 嵌入知识 |
+|------|:--:|:--:|------|
+| mm-problem-analyst | 30 | 70 | 01-problem-analysis.md 方法论 + 反模式陷阱 |
+| mm-modeler | 47 | 85 | 02-framework.md 三级判定 + 8 选型反例 + 09-innovation-playbook |
+| mm-data-hunter | 32 | 55 | 03-data-acquisition.md 质量检查 + 12-data-sources.md |
+| mm-coder | 35 | 95 | 11-anti-patterns §4 代码反模式 + 防错机制 + 05-visualization |
+| mm-writer | 29 | 115 | 13-phrase-bank 黑名单 + 四项深度 + 审题贯穿 + 06-writing |
+| mm-reviewer | 26 | 100 | 15-scoring-rubric 锚点 + 07 角色权重 + 反模式检查清单 |
+| mm-verifier | 28 | 95 | 11-anti-patterns §2+§4 + 统计陷阱清单 + 检查清单 |
+| mm-reasoner | 25 | 90 | 07 数学严谨性清单 + 15-scoring-rubric §3.2 + 反模式 §2 |
+
+### 新增阶段 1.5：文献综述（国一必备）
+- 检索 ≥ 8 篇相关文献（中英文各 ≥ 3 篇）
+- ≥ 5 篇有批判性评述（贡献+不足+与本题关系）
+- 研究空白定位：现有方法留下什么缺口？
+- 文献写入 `paper/refs.bib`
+
+### 国一创新验证标准升级
+- 若 innovation 目标 ≥ 8.0，必须包含**消融实验**（逐一移除创新组件证明独立贡献）
+- 对比基线从 ≥ 2 升级为 ≥ 3（经典 + 最近 + 消融）
+- 验证场景 ≥ 2 个（不同数据集/时间段/参数配置）
+
+### 08-stage-verification.md 同步
+- 新增 D1/A1/A2/A3 门禁的详细验证协议
+- 新增缺失值/异常值检查命令
+
+### 依赖链升级
+```
+v2.1: 0→1[M1+H1]→2→3[D1]→4[P1/P2/A1+H2]→5→6[W1/A2/W2+H3]→7[A3]
+v2.2: 0→1[M1+H1]→1.5[文献综述]→2→3[D1]→4[P1/P2/A1+H2]→5→6[W1/A2/W2+H3]→7[A3]
+```
+
+---
+
 ## v2.1.0 (2026-07-28) — 深度剖析修复版
 
 ### Bug 修复（紧急）
