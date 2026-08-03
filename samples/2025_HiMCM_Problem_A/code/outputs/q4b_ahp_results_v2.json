@@ -1,0 +1,14 @@
+{
+  "criteria_weights": {
+    "Search Speed Improvement": 0.1409,
+    "Victim Detection Rate": 0.2433,
+    "Firefighter Safety": 0.3045,
+    "Cost & Logistics": 0.0979,
+    "Operational Reliability": 0.2134
+  },
+  "diagnostics": {
+    "lambda_max": 5.0907,
+    "CI": 0.0227,
+    "CR": 0.0203,
+    "RI": 1.12,
+    "consistent": 

@@ -1,0 +1,11 @@
+type,label,sweep_time_s,priority_weight,complexity_mult,notes
+office,Standard Office,20,1.0,1.0,Adult occupants; standard visual check
+open_office,Open Plan Office,30,1.0,1.3,Larger space with cubicles; multiple sight lines needed
+meeting,Meeting Room,15,1.0,0.8,Open space; limited hiding spots
+daycare,Children's Daycare,45,3.0,3.0,Children may hide; check under tables/beds/cabinets
+lab,Chemistry Laboratory,40,2.0,2.0,Hazardous materials; need PPE; check fume hoods/storage
+warehouse,Warehouse,60,1.5,2.5,High shelves; grid search pattern; large area
+kitchen,Commercial Kitchen,35,2.0,1.8,Gas leak risk; check appliances/storage
+medical,Medical Room,50,2.5,2.0,Patients may be immobile; check beds/equipment
+corridor,Corridor/Hallway,5,0.5,0.3,Pass-through only; quick visual sweep
+stairwell,Stairwell,10,1.0,0.5,Check landings; vertical movement separate

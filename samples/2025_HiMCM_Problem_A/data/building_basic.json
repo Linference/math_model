@@ -1,0 +1,31 @@
+{
+  "name": "Basic Scenario (Figure 1)",
+  "floors": 1,
+  "floor_height": 3.0,
+  "rooms": [
+    {"id": "R1", "label": "Office 1", "floor": 1, "type": "office", "area_m2": 20, "x": 0, "y": 0},
+    {"id": "R2", "label": "Office 2", "floor": 1, "type": "office", "area_m2": 20, "x": 0, "y": 5},
+    {"id": "R3", "label": "Office 3", "floor": 1, "type": "office", "area_m2": 20, "x": 0, "y": 10},
+    {"id": "R4", "label": "Office 4", "floor": 1, "type": "office", "area_m2": 20, "x": 10, "y": 0},
+    {"id": "R5", "label": "Office 5", "floor": 1, "type": "office", "area_m2": 20, "x": 10, "y": 5},
+    {"id": "R6", "label": "Office 6", "floor": 1, "type": "office", "area_m2": 20, "x": 10, "y": 10}
+  ],
+  "hallway": {"length": 30, "width": 1.8, "x_start": 4, "y_start": -1, "orientation": "vertical"},
+  "exits": [
+    {"id": "E1", "label": "Exit North", "x": 5, "y": -2},
+    {"id": "E2", "label": "Exit South", "x": 5, "y": 12}
+  ],
+  "stairs": [],
+  "connections": [
+    {"from": "E1", "to": "hallway_N", "distance": 2},
+    {"from": "hallway_N", "to": "R1", "distance": 1.5},
+    {"from": "hallway_N", "to": "R4", "distance": 1.5},
+    {"from": "R1", "to": "R2", "distance": 5},
+    {"from": "R4", "to": "R5", "distance": 5},
+    {"from": "R2", "to": "R3", "distance": 5},
+    {"from": "R5", "to": "R6", "distance": 5},
+    {"from": "R3", "to": "hallway_S", "distance": 1.5},
+    {"from": "R6", "to": "hallway_S", "distance": 1.5},
+    {"from": "hallway_S", "to": "E2", "distance": 2}
+  ]
+}

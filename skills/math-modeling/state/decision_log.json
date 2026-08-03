@@ -1,0 +1,96 @@
+{
+  "_schema": "1.0",
+  "_comment": "=== math-modeling skill 决策日志 (Cross-Stage Decision Log) === 每次竞赛项目一份，由各 stage 工作流按需读写。",
+
+  "competition": {
+    "_comment": "竞赛基本信息，Stage 0 初始化时填写",
+    "name": "",
+    "year": "",
+    "problem": "",
+    "language": ""
+  },
+
+  "stages": {
+    "_comment": "各阶段状态、产物与关键决策记录",
+
+    "0_init": {
+      "_comment": "Stage 0: 项目初始化 — 创建目录结构、配置环境、拉取赛题",
+      "status": "pending",
+      "completed_at": null,
+      "artifacts": [],
+      "decisions": {}
+    },
+
+    "1_analysis": {
+      "_comment": "Stage 1: 问题分析 — 拆分子问题、确定关键词、文献检索、可行性评估",
+      "status": "pending",
+      "completed_at": null,
+      "artifacts": [],
+      "decisions": {}
+    },
+
+    "2_modeling": {
+      "_comment": "Stage 2: 建模 — 每问选型、数学推导、假设表、框架图",
+      "status": "pending",
+      "completed_at": null,
+      "artifacts": [],
+      "decisions": {},
+      "ml_dl_decision": "",
+      "methods_per_question": {}
+    },
+
+    "3_data": {
+      "_comment": "Stage 3: 数据处理 — 来源、清洗、特征工程、质量报告",
+      "status": "pending",
+      "completed_at": null,
+      "artifacts": [],
+      "decisions": {},
+      "sources": [],
+      "data_quality": {}
+    },
+
+    "4_solving": {
+      "_comment": "Stage 4: 求解 — 代码实现、数值验证、参数调优",
+      "status": "pending",
+      "completed_at": null,
+      "artifacts": [],
+      "decisions": {},
+      "random_seed": null,
+      "dependencies": {}
+    },
+
+    "5_visualization": {
+      "_comment": "Stage 5: 可视化 — 论文插图制作，每模型至少 1 张说明性图",
+      "status": "pending",
+      "completed_at": null,
+      "artifacts": [],
+      "decisions": {},
+      "figure_count": 0
+    },
+
+    "6_writing": {
+      "_comment": "Stage 6: 论文撰写 — LaTeX 写作、排版、参考文献",
+      "status": "pending",
+      "completed_at": null,
+      "artifacts": [],
+      "decisions": {},
+      "word_count": 0
+    },
+
+    "7_review": {
+      "_comment": "Stage 7: 对抗性审阅 — 多次审核、评分、修改",
+      "status": "pending",
+      "completed_at": null,
+      "rounds": [],
+      "final_score": null,
+      "passed": false
+    }
+  },
+
+  "meta": {
+    "_comment": "元信息，自动维护",
+    "created_at": "",
+    "updated_at": "",
+    "skill_version": "2.0.0"
+  }
+}

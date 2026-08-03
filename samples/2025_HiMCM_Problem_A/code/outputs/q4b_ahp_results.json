@@ -1,0 +1,276 @@
+{
+  "criteria_weights": {
+    "Search Speed Improvement": 0.0931,
+    "Victim Detection Rate": 0.2306,
+    "Firefighter Safety": 0.4926,
+    "Cost & Logistics": 0.0468,
+    "Operational Reliability": 0.1369
+  },
+  "diagnostics": {
+    "lambda_max": 5.1267,
+    "CI": 0.0317,
+    "CR": 0.0283,
+    "RI": 1.12,
+    "consistent": true
+  },
+  "technology_ranking": [
+    {
+      "rank": 1,
+      "id": "T2",
+      "name": "SCBA with Extended Duration",
+      "score": 0.7385,
+      "criteria_breakdown": {
+        "Search Speed Improvement": 0.3333,
+        "Victim Detection Rate": 0.2222,
+        "Firefighter Safety": 1.0,
+        "Cost & Logistics": 0.5714,
+        "Operational Reliability": 1.0
+      }
+    },
+    {
+      "rank": 2,
+      "id": "T1",
+      "name": "Thermal Imaging Camera (TIC)",
+      "score": 0.7348,
+      "criteria_breakdown": {
+        "Search Speed Improvement": 0.7778,
+        "Victim Detection Rate": 0.8889,
+        "Firefighter Safety": 0.5556,
+        "Cost & Logistics": 1.0,
+        "Operational Reliability": 1.0
+      }
+    },
+    {
+      "rank": 3,
+      "id": "T6",
+      "name": "Augmented Reality (AR) Helmet Display",
+      "score": 0.7252,
+      "criteria_breakdown": {
+        "Search Speed Improvement": 0.8889,
+        "Victim Detection Rate": 0.6667,
+        "Firefighter Safety": 0.7778,
+        "Cost & Logistics": 0.4286,
+        "Operational Reliability": 0.625
+      }
+    },
+    {
+      "rank": 4,
+      "id": "T4",
+      "name": "Personal Alert Safety System (PASS)",
+      "score": 0.702,
+      "criteria_breakdown": {
+        "Search Speed Improvement": 0.2222,
+        "Victim Detection Rate": 0.3333,
+        "Firefighter Safety": 0.8889,
+        "Cost & Logistics": 1.0,
+        "Operational Reliability": 0.875
+      }
+    },
+    {
+      "rank": 5,
+      "id": "T11",
+      "name": "Wearable Biometric Monitor",
+      "score": 0.6886,
+      "criteria_breakdown": {
+        "Search Speed Improvement": 0.3333,
+        "Victim Detection Rate": 0.3333,
+        "Firefighter Safety": 0.8889,
+        "Cost & Logistics": 0.8571,
+        "Operational Reliability": 0.75
+      }
+    },
+    {
+      "rank": 6,
+      "id": "T9",
+      "name": "LiDAR Building Scanner",
+      "score": 0.6621,
+      "criteria_breakdown": {
+        "Search Speed Improvement": 0.7778,
+        "Victim Detection Rate": 0.5556,
+        "Firefighter Safety": 0.6667,
+        "Cost & Logistics": 0.2857,
+        "Operational Reliability": 0.875
+      }
+    },
+    {
+      "rank": 7,
+      "id": "T7",
+      "name": "Robotic Search Unit (Ground)",
+      "score": 0.6548,
+      "criteria_breakdown": {
+        "Search Speed Improvement": 0.3333,
+        "Victim Detection Rate": 0.7778,
+        "Firefighter Safety": 0.6667,
+        "Cost & Logistics": 0.2857,
+        "Operational Reliability": 0.75
+      }
+    },
+    {
+      "rank": 8,
+      "id": "T5",
+      "name": "Drone-Assisted Overwatch",
+      "score": 0.653,
+      "criteria_breakdown": {
+        "Search Speed Improvement": 0.6667,
+        "Victim Detection Rate": 0.8889,
+        "Firefighter Safety": 0.5556,
+        "Cost & Logistics": 0.5714,
+        "Operational Reliability": 0.625
+      }
+    },
+    {
+      "rank": 9,
+      "id": "T8",
+      "name": "Smart Floor Sensors (IoT)",
+      "score": 0.6445,
+      "criteria_breakdown": {
+        "Search Speed Improvement": 0.5556,
+        "Victim Detection Rate": 1.0,
+        "Firefighter Safety": 0.5556,
+        "Cost & Logistics": 0.4286,
+        "Operational Reliability": 0.5
+      }
+    },
+    {
+      "rank": 10,
+      "id": "T12",
+      "name": "Automatic Door/Wedge System",
+      "score": 0.6424,
+      "criteria_breakdown": {
+        "Search Speed Improvement": 0.3333,
+        "Victim Detection Rate": 0.2222,
+        "Firefighter Safety": 0.7778,
+        "Cost & Logistics": 0.8571,
+        "Operational Reliability": 1.0
+      }
+    },
+    {
+      "rank": 11,
+      "id": "T3",
+      "name": "AI-Powered Search Path Optimizer",
+      "score": 0.6141,
+      "criteria_breakdown": {
+        "Search Speed Improvement": 1.0,
+        "Victim Detection Rate": 0.7778,
+        "Firefighter Safety": 0.4444,
+        "Cost & Logistics": 0.4286,
+        "Operational Reliability": 0.75
+      }
+    },
+    {
+      "rank": 12,
+      "id": "T10",
+      "name": "Acoustic Victim Locator",
+      "score": 0.5295,
+      "criteria_breakdown": {
+        "Search Speed Improvement": 0.4444,
+        "Victim Detection Rate": 0.8889,
+        "Firefighter Safety": 0.3333,
+        "Cost & Logistics": 0.7143,
+        "Operational Reliability": 0.625
+      }
+    }
+  ],
+  "sensitivity": {
+    "Search Speed Improvement": {
+      "rank_swaps": [
+        4,
+        4,
+        2,
+        0,
+        4,
+        4,
+        5
+      ],
+      "alphas": [
+        0.7,
+        0.8,
+        0.9,
+        1.0,
+        1.1,
+        1.2,
+        1.3
+      ]
+    },
+    "Victim Detection Rate": {
+      "rank_swaps": [
+        8,
+        6,
+        4,
+        0,
+        4,
+        6,
+        10
+      ],
+      "alphas": [
+        0.7,
+        0.8,
+        0.9,
+        1.0,
+        1.1,
+        1.2,
+        1.3
+      ]
+    },
+    "Firefighter Safety": {
+      "rank_swaps": [
+        10,
+        9,
+        4,
+        0,
+        5,
+        6,
+        8
+      ],
+      "alphas": [
+        0.7,
+        0.8,
+        0.9,
+        1.0,
+        1.1,
+        1.2,
+        1.3
+      ]
+    },
+    "Cost & Logistics": {
+      "rank_swaps": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        6,
+        6
+      ],
+      "alphas": [
+        0.7,
+        0.8,
+        0.9,
+        1.0,
+        1.1,
+        1.2,
+        1.3
+      ]
+    },
+    "Operational Reliability": {
+      "rank_swaps": [
+        6,
+        4,
+        0,
+        0,
+        2,
+        2,
+        3
+      ],
+      "alphas": [
+        0.7,
+        0.8,
+        0.9,
+        1.0,
+        1.1,
+        1.2,
+        1.3
+      ]
+    }
+  }
+}

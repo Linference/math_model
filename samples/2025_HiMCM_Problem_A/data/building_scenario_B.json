@@ -1,0 +1,26 @@
+{
+  "name": "Scenario B: 2-Story Office + Laboratory",
+  "floors": 2,
+  "floor_height": 3.5,
+  "rooms": [
+    {"id": "R101", "label": "Office 101", "floor": 1, "type": "office", "area_m2": 20, "x": 0, "y": 0},
+    {"id": "R102", "label": "Office 102", "floor": 1, "type": "office", "area_m2": 20, "x": 0, "y": 5},
+    {"id": "R103", "label": "Chemistry Lab", "floor": 1, "type": "lab", "area_m2": 40, "x": 0, "y": 10, "priority": "high"},
+    {"id": "R104", "label": "Office 104", "floor": 1, "type": "office", "area_m2": 20, "x": 10, "y": 0},
+    {"id": "R105", "label": "Office 105", "floor": 1, "type": "office", "area_m2": 20, "x": 10, "y": 5},
+    {"id": "R201", "label": "Office 201", "floor": 2, "type": "office", "area_m2": 20, "x": 0, "y": 0},
+    {"id": "R202", "label": "Office 202", "floor": 2, "type": "office", "area_m2": 20, "x": 0, "y": 5},
+    {"id": "R203", "label": "Office 203", "floor": 2, "type": "office", "area_m2": 20, "x": 0, "y": 10},
+    {"id": "R204", "label": "Office 204", "floor": 2, "type": "office", "area_m2": 20, "x": 10, "y": 0},
+    {"id": "R205", "label": "Office 205", "floor": 2, "type": "office", "area_m2": 20, "x": 10, "y": 5},
+    {"id": "R206", "label": "Office 206", "floor": 2, "type": "office", "area_m2": 20, "x": 10, "y": 10}
+  ],
+  "hallway": {"length": 30, "width": 1.8},
+  "exits": [
+    {"id": "E1", "label": "Exit North", "floor": 1, "x": 5, "y": -2},
+    {"id": "E2", "label": "Exit South", "floor": 1, "x": 5, "y": 12}
+  ],
+  "stairs": [
+    {"id": "S1", "label": "Main Staircase", "floor_from": 1, "floor_to": 2, "x": 7, "y": 5, "length": 8}
+  ]
+}

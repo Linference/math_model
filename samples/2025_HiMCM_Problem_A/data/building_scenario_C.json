@@ -1,0 +1,32 @@
+{
+  "name": "Scenario C: 3-Story Mixed-Use Complex",
+  "floors": 3,
+  "floor_height": 3.5,
+  "rooms": [
+    {"id": "R101", "label": "Daycare Room A", "floor": 1, "type": "daycare", "area_m2": 30, "priority": "highest"},
+    {"id": "R102", "label": "Daycare Room B", "floor": 1, "type": "daycare", "area_m2": 30, "priority": "highest"},
+    {"id": "R103", "label": "Nap Room", "floor": 1, "type": "daycare", "area_m2": 25, "priority": "highest"},
+    {"id": "R104", "label": "Kitchen", "floor": 1, "type": "kitchen", "area_m2": 20, "priority": "high"},
+    {"id": "R105", "label": "Daycare Office", "floor": 1, "type": "office", "area_m2": 15},
+    {"id": "R201", "label": "Open Office Zone A", "floor": 2, "type": "open_office", "area_m2": 40, "sub_zones": 4},
+    {"id": "R202", "label": "Open Office Zone B", "floor": 2, "type": "open_office", "area_m2": 40, "sub_zones": 4},
+    {"id": "R203", "label": "Meeting Room 1", "floor": 2, "type": "meeting", "area_m2": 25},
+    {"id": "R204", "label": "Meeting Room 2", "floor": 2, "type": "meeting", "area_m2": 25},
+    {"id": "R301", "label": "Warehouse Aisle 1", "floor": 3, "type": "warehouse", "area_m2": 40},
+    {"id": "R302", "label": "Warehouse Aisle 2", "floor": 3, "type": "warehouse", "area_m2": 40},
+    {"id": "R303", "label": "Warehouse Aisle 3", "floor": 3, "type": "warehouse", "area_m2": 40},
+    {"id": "R304", "label": "Warehouse Aisle 4", "floor": 3, "type": "warehouse", "area_m2": 40},
+    {"id": "R305", "label": "Warehouse Aisle 5", "floor": 3, "type": "warehouse", "area_m2": 40},
+    {"id": "R306", "label": "Warehouse Aisle 6", "floor": 3, "type": "warehouse", "area_m2": 40},
+    {"id": "R307", "label": "Warehouse Office", "floor": 3, "type": "office", "area_m2": 15}
+  ],
+  "hallway": {"length": 25, "width": 2.0},
+  "exits": [
+    {"id": "E1", "label": "Main Entrance", "floor": 1, "x": 5, "y": -2},
+    {"id": "E2", "label": "Rear Exit", "floor": 1, "x": 5, "y": 22}
+  ],
+  "stairs": [
+    {"id": "S1", "label": "Central Stairs", "floor_from": 1, "floor_to": 2, "x": 5, "y": 10, "length": 8},
+    {"id": "S2", "label": "East Stairs", "floor_from": 2, "floor_to": 3, "x": 12, "y": 10, "length": 8}
+  ]
+}

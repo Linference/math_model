@@ -1,0 +1,32 @@
+{
+  "project": "2025_HiMCM_Problem_A",
+  "problem": "Emergency Evacuation Sweeps",
+  "language": "zh",
+  "start_time": "2026-07-30",
+  "python_path": "/c/Users/HUAWEI/AppData/Local/Programs/Python/Python311/python.exe",
+  "stages": {
+    "0": {"status": "completed", "started": "2026-07-30", "completed": "2026-07-30"},
+    "1": {"status": "completed", "started": "2026-07-30", "completed": "2026-07-30"},
+    "1.5": {"status": "completed", "started": "2026-07-30", "completed": "2026-07-30", "note": "14篇文献, 6篇详评, 3大研究空白, refs.bib已创建"},
+    "2": {"status": "completed", "started": "2026-07-30", "completed": "2026-07-30", "note": "mm-modeler, 创新评级8.0+"},
+    "3": {"status": "completed", "started": "2026-07-30", "completed": "2026-07-30", "note": "3个建筑JSON+房间参数CSV+SOURCES.md"},
+    "4": {"status": "in_progress", "started": "2026-07-30", "note": "mm-coder编码中"},
+    "5": {"status": "pending"},
+    "6": {"status": "pending"},
+    "7": {"status": "pending"}
+  },
+  "gates": {
+    "M1": {"status": "PASS", "agent": "mm-verifier", "timestamp": "2026-07-30", "result": "6/6 PASS"},
+    "D1": {"status": "pending"},
+    "P1": {"status": "pending"},
+    "P2": {"status": "pending"},
+    "A1": {"status": "pending"},
+    "W1": {"status": "pending"},
+    "A2": {"status": "pending"},
+    "W2": {"status": "pending"},
+    "A3": {"status": "pending"},
+    "H1": {"status": "PASS", "timestamp": "2026-07-30", "note": "用户确认问题类型判定(组合优化+随机模拟)和20条隐性约束无误"},
+    "H2": {"status": "pending"},
+    "H3": {"status": "pending"}
+  }
+}
