@@ -3,7 +3,7 @@
   "problem": "Emergency Evacuation Sweeps",
   "language": "zh",
   "start_time": "2026-07-30",
-  "python_path": "/c/Users/HUAWEI/AppData/Local/Programs/Python/Python311/python.exe",
+  "python_path": "python",
   "stages": {
     "0": {"status": "completed", "started": "2026-07-30", "completed": "2026-07-30"},
     "1": {"status": "completed", "started": "2026-07-30", "completed": "2026-07-30"},
